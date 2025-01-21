@@ -1,9 +1,20 @@
 package com.academia.loja_accenture.modulos.pedido.domain;
 
-import lombok.Getter;
+import jakarta.persistence.*;
+import lombok.Data;
 
-@Getter
+@Entity
+@Table(name = "produto_tem_pedido")
+@Data
 public class ProdutoTemPedido {
-  private Long produtoId;
-  private Long pedidoId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+  @ManyToOne
+  @JoinColumn(name = "produto_id")
+  private Produto produto;
+
+  @ManyToOne
+  @JoinColumn(name = "pedido_id")
+  private Pedido pedido;
 }

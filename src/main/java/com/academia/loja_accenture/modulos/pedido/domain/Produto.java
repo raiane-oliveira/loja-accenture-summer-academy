@@ -1,15 +1,36 @@
 package com.academia.loja_accenture.modulos.pedido.domain;
 
-import lombok.Getter;
+import com.academia.loja_accenture.modulos.usuario.domain.Vendedor;
+import jakarta.persistence.*;
+import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
-@Getter
+@Entity
+@Table(name = "produto")
+@Data
 public class Produto {
-  private int id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  
+  @Column(nullable = false)
   private String nome;
+  
+  @Column(nullable = false)
   private String descricao;
+  
+  @Column(nullable = false)
   private BigDecimal valor;
-  private Date dataCadastro;
+  
+  @Column(name = "created_at", nullable = false)
+  @CreatedDate
+  @Temporal(TemporalType.TIMESTAMP)
+  private LocalDateTime createdAt;
+  
+  @ManyToOne
+  @JoinColumn(name = "vendedor_id")
+  private Vendedor vendedor;
 }

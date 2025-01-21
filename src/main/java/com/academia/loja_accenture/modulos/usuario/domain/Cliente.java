@@ -1,7 +1,7 @@
 package com.academia.loja_accenture.modulos.usuario.domain;
 
 /**
- * Classe Cliente - representa a entidade Cliente no banco de dados MySQL.
+ * Adiciona classe Cliente para mapeamento no banco de dados MySQL.
  *
  * @author Bruna Neves
  */

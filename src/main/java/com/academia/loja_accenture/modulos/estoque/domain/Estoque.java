@@ -6,8 +6,6 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Table(name = "estoque")
 @Entity
@@ -28,6 +26,7 @@ public class Estoque {
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime createdAt = LocalDateTime.now();
   
-  @OneToMany(mappedBy = "estoque", cascade = CascadeType.ALL)
-  private List<Produto> produtos = new ArrayList<>();
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "produto_id", unique = true)
+  private Produto produto;
 }

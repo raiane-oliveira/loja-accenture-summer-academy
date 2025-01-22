@@ -4,7 +4,7 @@ import com.academia.loja_accenture.modulos.estoque.domain.Estoque;
 import com.academia.loja_accenture.modulos.usuario.domain.Vendedor;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -28,18 +28,16 @@ public class Produto {
   @Column(nullable = false, precision = 10, scale = 2)
   private BigDecimal valor;
   
-  @Column(name = "created_at", nullable = false)
-  @CreatedDate
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "created_at")
+  @CreationTimestamp
   private LocalDateTime createdAt;
   
   @ManyToOne
   @JoinColumn(name = "vendedor_id", nullable = false)
   private Vendedor vendedor;
   
-  @ManyToOne
-  @JoinColumn(name = "estoque_id", nullable = false)
-  private Estoque estoque;
+  @OneToMany(mappedBy = "produto")
+  private List<Estoque> estoques;
   
   @ManyToMany(cascade = CascadeType.ALL)
   @JoinTable(

@@ -13,6 +13,7 @@ CREATE TABLE estoque
     name       VARCHAR(255)          NOT NULL,
     quantidade BIGINT                NOT NULL,
     created_at datetime              NOT NULL,
+    produto_id BIGINT                NULL,
     CONSTRAINT pk_estoque PRIMARY KEY (id)
 );
 
@@ -53,9 +54,8 @@ CREATE TABLE produto
     nome        VARCHAR(255)          NOT NULL,
     descricao   VARCHAR(255)          NOT NULL,
     valor       DECIMAL(10, 2)        NOT NULL,
-    created_at  datetime              NOT NULL,
+    created_at  datetime              NULL,
     vendedor_id BIGINT                NOT NULL,
-    estoque_id  BIGINT                NOT NULL,
     CONSTRAINT pk_produto PRIMARY KEY (id)
 );
 
@@ -86,11 +86,17 @@ CREATE TABLE vendedor
 ALTER TABLE cliente
     ADD CONSTRAINT uc_cliente_email UNIQUE (email);
 
+ALTER TABLE estoque
+    ADD CONSTRAINT uc_estoque_produto UNIQUE (produto_id);
+
 ALTER TABLE pagamento
     ADD CONSTRAINT uc_pagamento_pedido UNIQUE (pedido_id);
 
 ALTER TABLE vendedor
     ADD CONSTRAINT uc_vendedor_email UNIQUE (email);
+
+ALTER TABLE estoque
+    ADD CONSTRAINT FK_ESTOQUE_ON_PRODUTO FOREIGN KEY (produto_id) REFERENCES produto (id);
 
 ALTER TABLE pagamento
     ADD CONSTRAINT FK_PAGAMENTO_ON_PEDIDO FOREIGN KEY (pedido_id) REFERENCES pedido (id);
@@ -100,9 +106,6 @@ ALTER TABLE pedido
 
 ALTER TABLE pedido
     ADD CONSTRAINT FK_PEDIDO_ON_VENDEDOR FOREIGN KEY (vendedor_id) REFERENCES vendedor (id);
-
-ALTER TABLE produto
-    ADD CONSTRAINT FK_PRODUTO_ON_ESTOQUE FOREIGN KEY (estoque_id) REFERENCES estoque (id);
 
 ALTER TABLE produto
     ADD CONSTRAINT FK_PRODUTO_ON_VENDEDOR FOREIGN KEY (vendedor_id) REFERENCES vendedor (id);

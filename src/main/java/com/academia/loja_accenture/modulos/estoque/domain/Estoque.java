@@ -1,10 +1,13 @@
 package com.academia.loja_accenture.modulos.estoque.domain;
 
+import com.academia.loja_accenture.modulos.pedido.domain.Produto;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "estoque")
 @Entity
@@ -24,4 +27,7 @@ public class Estoque {
   @CreatedDate
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime createdAt = LocalDateTime.now();
+  
+  @OneToMany(mappedBy = "estoque", cascade = CascadeType.ALL)
+  private List<Produto> produtos = new ArrayList<>();
 }

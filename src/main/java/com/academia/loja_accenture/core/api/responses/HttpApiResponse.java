@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ApiResponse {
+public class HttpApiResponse {
   private String message;
 }

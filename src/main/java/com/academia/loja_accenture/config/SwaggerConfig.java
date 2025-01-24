@@ -22,6 +22,7 @@ public class SwaggerConfig {
     return new OpenAPI()
         .info(informacoesApi());
   }
+  
   private Info informacoesApi() {
     Info apiInfo = new Info();
     

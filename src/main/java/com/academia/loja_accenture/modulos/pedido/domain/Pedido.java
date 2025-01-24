@@ -6,6 +6,8 @@ import com.academia.loja_accenture.modulos.usuario.domain.Cliente;
 import com.academia.loja_accenture.modulos.usuario.domain.Vendedor;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
@@ -21,40 +23,46 @@ import java.util.Set;
 public class Pedido {
   @Id
   private Long id;
-  
+
   @Column(nullable = false)
   private String descricao;
-  
+
   @Column(nullable = false, precision = 10, scale = 2)
   private BigDecimal valor;
-  
+
+  @Setter
+  @Getter
+  @Column(nullable = false, precision = 10, scale = 2)
+  private BigDecimal total; // Novo campo para o valor total do pedido
+
   @Column(nullable = false)
   private int quantidade;
-  
+
   @Column(name = "created_at", nullable = false)
   @CreatedDate
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime createdAt;
-  
+
   @ManyToOne
   @JoinColumn(name = "cliente_id")
   private Cliente cliente;
-  
+
   @ManyToOne
   @JoinColumn(name = "vendedor_id")
   private Vendedor vendedor;
-  
+
   @ManyToMany(mappedBy = "pedidos")
   private List<Produto> produtos = new ArrayList<>();
-  
+
   @ManyToMany(cascade = CascadeType.ALL)
   @JoinTable(
-      name = "pedido_historico_status",
-      joinColumns = @JoinColumn(name = "pedido_id"),
-      inverseJoinColumns = @JoinColumn(name = "status_pedido_id")
+          name = "pedido_historico_status",
+          joinColumns = @JoinColumn(name = "pedido_id"),
+          inverseJoinColumns = @JoinColumn(name = "status_pedido_id")
   )
   private Set<StatusPedido> historicoStatus = new HashSet<>();
-  
+
   @OneToOne(mappedBy = "pedido")
   private Pagamento pagamento;
+
 }

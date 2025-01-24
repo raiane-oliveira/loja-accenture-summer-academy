@@ -3,6 +3,7 @@ package com.academia.loja_accenture.modulos.pagamento.domain;
 import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
@@ -32,15 +33,14 @@ public class Pagamento {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal valor;
     
-    @Column(name = "data_pagamento", nullable = false)
+    @Column(name = "data_pagamento")
     private LocalDateTime dataPagamento;
     
     @Column(name = "created_at", nullable = false)
-    @CreatedDate
-    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     private LocalDateTime createdAt;
     
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "pedido_id", unique = true, nullable = false)
+    @JoinColumn(name = "pedido_id", nullable = false)
     private Pedido pedido;
 }

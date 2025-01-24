@@ -8,13 +8,14 @@ import com.academia.loja_accenture.modulos.pedido.dto.ProdutoDTO;
 import com.academia.loja_accenture.modulos.pedido.repository.PedidoRepository;
 import com.academia.loja_accenture.modulos.pedido.repository.ProdutoRepository;
 import com.academia.loja_accenture.modulos.usuario.domain.Cliente;
+import com.academia.loja_accenture.modulos.usuario.domain.Vendedor;
 import com.academia.loja_accenture.modulos.usuario.repository.ClienteRepository;
+import com.academia.loja_accenture.modulos.usuario.repository.VendedorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +23,14 @@ public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final ProdutoRepository produtoRepository;
     private final ClienteRepository clienteRepository;
+    private final VendedorRepository vendedorRepository;
 
     public PedidoDTO save(CadastrarPedidoDTO data) {
         Cliente cliente = clienteRepository.findById(data.clienteId())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
+        Vendedor vendedor = vendedorRepository.findById(data.vendedorId())
+            .orElseThrow(() -> new IllegalArgumentException("Vendedor não encontrado"));
+        
         List<Produto> produtos = produtoRepository.findAllById(data.produtosIds());
         if (produtos.isEmpty()) {
             throw new IllegalArgumentException("Nenhum produto encontrado");
@@ -39,7 +44,10 @@ public class PedidoService {
         Pedido pedido = new Pedido();
         pedido.setCliente(cliente);
         pedido.setProdutos(produtos);
-        pedido.setTotal(total); // Ajustado para BigDecimal
+        pedido.setValor(total);
+        pedido.setVendedor(vendedor);
+        pedido.setQuantidade(produtos.size());
+        pedido.setDescricao(data.descricao());
 
         Pedido savedPedido = pedidoRepository.save(pedido);
         return convertToDTO(savedPedido);
@@ -53,19 +61,23 @@ public class PedidoService {
 
     private PedidoDTO convertToDTO(Pedido pedido) {
         return new PedidoDTO(
-                pedido.getId(),
-                pedido.getCliente().getId(),
-                pedido.getProdutos().stream().map(produto ->
-                        new ProdutoDTO(
-                                produto.getId(),
-                                produto.getNome(),
-                                produto.getDescricao(),
-                                produto.getValor().doubleValue(), // Converte BigDecimal para Double
-                                produto.getCreatedAt(),
-                                produto.getVendedor().getId()
-                        )
-                ).collect(Collectors.toList()),
-                pedido.getTotal().doubleValue() // Converte BigDecimal para Double
+            pedido.getId(),
+            pedido.getDescricao(),
+            pedido.getValor(),
+            pedido.getQuantidade(),
+            pedido.getCliente().getId(),
+            pedido.getVendedor().getId(),
+            pedido.getProdutos().stream().map(produto ->
+                new ProdutoDTO(
+                    produto.getId(),
+                    produto.getNome(),
+                    produto.getDescricao(),
+                    produto.getValor(),
+                    produto.getCreatedAt(),
+                    produto.getVendedor().getId()
+                )
+            ).toList(),
+            pedido.getCreatedAt()
         );
     }
 }

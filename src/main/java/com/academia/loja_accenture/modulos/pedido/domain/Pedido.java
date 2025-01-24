@@ -5,10 +5,10 @@ import com.academia.loja_accenture.modulos.rastreamento.domain.StatusPedido;
 import com.academia.loja_accenture.modulos.usuario.domain.Cliente;
 import com.academia.loja_accenture.modulos.usuario.domain.Vendedor;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,8 +20,11 @@ import java.util.Set;
 @Entity
 @Table(name = "pedido")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Pedido {
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @Column(nullable = false)
@@ -30,17 +33,11 @@ public class Pedido {
   @Column(nullable = false, precision = 10, scale = 2)
   private BigDecimal valor;
 
-  @Setter
-  @Getter
-  @Column(nullable = false, precision = 10, scale = 2)
-  private BigDecimal total; // Novo campo para o valor total do pedido
-
   @Column(nullable = false)
   private int quantidade;
 
   @Column(name = "created_at", nullable = false)
-  @CreatedDate
-  @Temporal(TemporalType.TIMESTAMP)
+  @CreationTimestamp
   private LocalDateTime createdAt;
 
   @ManyToOne
@@ -64,5 +61,4 @@ public class Pedido {
 
   @OneToOne(mappedBy = "pedido")
   private Pagamento pagamento;
-
 }

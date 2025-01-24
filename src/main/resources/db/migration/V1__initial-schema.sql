@@ -31,13 +31,13 @@ CREATE TABLE pagamento
 
 CREATE TABLE pedido
 (
-    id          BIGINT         NOT NULL,
-    descricao   VARCHAR(255)   NOT NULL,
-    valor       DECIMAL(10, 2) NOT NULL,
-    quantidade  INT            NOT NULL,
-    created_at  datetime       NOT NULL,
-    cliente_id  BIGINT         NULL,
-    vendedor_id BIGINT         NULL,
+    id          BIGINT AUTO_INCREMENT NOT NULL,
+    descricao   VARCHAR(255)          NOT NULL,
+    valor       DECIMAL(10, 2)        NOT NULL,
+    quantidade  INT                   NOT NULL,
+    created_at  datetime              NOT NULL,
+    cliente_id  BIGINT                NULL,
+    vendedor_id BIGINT                NULL,
     CONSTRAINT pk_pedido PRIMARY KEY (id)
 );
 

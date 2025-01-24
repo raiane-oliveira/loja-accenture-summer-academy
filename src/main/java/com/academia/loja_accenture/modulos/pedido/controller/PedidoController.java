@@ -1,5 +1,6 @@
 package com.academia.loja_accenture.modulos.pedido.controller;
 
+import com.academia.loja_accenture.core.api.responses.ApiResponse;
 import com.academia.loja_accenture.modulos.pedido.dto.CadastrarPedidoDTO;
 import com.academia.loja_accenture.modulos.pedido.dto.PedidoDTO;
 import com.academia.loja_accenture.modulos.pedido.service.PedidoService;
@@ -15,15 +16,21 @@ public class PedidoController {
     private final PedidoService pedidoService;
 
     @PostMapping
-    public ResponseEntity<PedidoDTO> cadastrarPedido(@Valid @RequestBody CadastrarPedidoDTO data) {
-        PedidoDTO pedido = pedidoService.save(data);
-        return ResponseEntity.status(201).body(pedido);
+    public ResponseEntity<ApiResponse> cadastrarPedido(@Valid @RequestBody CadastrarPedidoDTO data) {
+        pedidoService.save(data);
+        return ResponseEntity.status(201).body(new ApiResponse("Pedido cadastrado com sucesso"));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PedidoDTO> obterPedido(@PathVariable Long id) {
-        PedidoDTO pedido = pedidoService.getById(id);
-        return ResponseEntity.ok(pedido);
+        try {
+            PedidoDTO pedido = pedidoService.getById(id);
+            return ResponseEntity.ok(pedido);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
 

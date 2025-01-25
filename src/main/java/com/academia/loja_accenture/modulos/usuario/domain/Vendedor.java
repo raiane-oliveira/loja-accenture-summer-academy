@@ -10,34 +10,30 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Adiciona classe Vendedor para mapeamento no banco de dados MySQL.
- *
- * @author Bruna Neves
- */
 @Entity
 @Table(name = "vendedor")
 @Data
 public class Vendedor {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(nullable = false)
+
+    @Column(nullable = false, length = 50)
     private String nome;
-    
-    @Column(nullable = false)
+
+    @Column(nullable = false, length = 50)
     private String setor;
-    
-    @Column(nullable = false, unique = true)
+
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
-    
+
     @Column(nullable = false)
     private String senha;
-    
-    @OneToMany(mappedBy = "vendedor", cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "vendedor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Produto> produtos = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "vendedor")
+
+    @OneToMany(mappedBy = "vendedor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Pedido> pedidos = new HashSet<>();
 }

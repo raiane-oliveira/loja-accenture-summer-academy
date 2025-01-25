@@ -1,34 +1,26 @@
 package com.academia.loja_accenture.modulos.usuario.domain;
 
-import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
-
-/**
- * Adiciona classe Cliente para mapeamento no banco de dados MySQL.
- *
- * @author Bruna Neves
- */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "cliente")
-@Data
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(nullable = false)
+
+    @Column(nullable = false, length = 50)
     private String nome;
-    
-    @Column(unique = true, nullable = false)
+
+    @Column(nullable = false, unique = true)
     private String email;
-    
+
     @Column(nullable = false)
     private String senha;
-    
-    @OneToMany(mappedBy = "cliente")
-    private Set<Pedido> pedidos = new HashSet<>();
 }

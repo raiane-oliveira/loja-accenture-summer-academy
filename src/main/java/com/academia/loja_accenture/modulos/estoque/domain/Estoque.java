@@ -30,3 +30,4 @@ public class Estoque {
   @JoinColumn(name = "produto_id", unique = true)
   private Produto produto;
 }
+

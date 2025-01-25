@@ -1,4 +1,4 @@
-package com.academia.loja_accenture.core.queue;
+package com.academia.loja_accenture.core.message_broker;
 
 import lombok.Getter;
 

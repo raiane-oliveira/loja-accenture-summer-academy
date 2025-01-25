@@ -16,15 +16,23 @@ public class StatusPedido {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  
+
   @Column(nullable = false)
   private String descricao;
-  
-  @Column(name = "created_at", nullable = false)
+
   @CreatedDate
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
-  
+
   @ManyToMany(mappedBy = "historicoStatus")
   private List<Pedido> pedidos = new ArrayList<>();
+
+  public StatusPedido() {}
+
+  public StatusPedido(Long id, String descricao, LocalDateTime createdAt, List<Pedido> pedidos) {
+    this.id = id;
+    this.descricao = descricao;
+    this.createdAt = createdAt;
+    this.pedidos = pedidos;
+  }
 }

@@ -36,4 +36,24 @@ public class Vendedor {
 
     @OneToMany(mappedBy = "vendedor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Pedido> pedidos = new HashSet<>();
+
+    // Construtor padrão (necessário para o Jackson)
+    public Vendedor() {}
+
+    // Construtor completo (opcional, mas útil para testes ou inicialização)
+    public Vendedor(Long id, String nome, String setor, String email, String senha) {
+        this.id = id;
+        this.nome = nome;
+        this.setor = setor;
+        this.email = email;
+        this.senha = senha;
+    }
+
+    // Construtor adicional (sem ID, para criação de novos objetos)
+    public Vendedor(String nome, String setor, String email, String senha) {
+        this.nome = nome;
+        this.setor = setor;
+        this.email = email;
+        this.senha = senha;
+    }
 }

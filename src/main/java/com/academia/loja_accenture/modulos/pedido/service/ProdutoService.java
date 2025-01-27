@@ -1,10 +1,12 @@
 package com.academia.loja_accenture.modulos.pedido.service;
 
 import com.academia.loja_accenture.core.PaginationParams;
+import com.academia.loja_accenture.core.exceptions.VendedorNotFoundException;
 import com.academia.loja_accenture.modulos.pedido.domain.Produto;
 import com.academia.loja_accenture.modulos.pedido.dto.AtualizarProdutoDTO;
 import com.academia.loja_accenture.modulos.pedido.dto.CadastrarProdutoDTO;
 import com.academia.loja_accenture.modulos.pedido.dto.ProdutoDTO;
+import com.academia.loja_accenture.core.exceptions.ProdutoNotFoundException;
 import com.academia.loja_accenture.modulos.pedido.repository.ProdutoRepository;
 import com.academia.loja_accenture.modulos.usuario.domain.Vendedor;
 import com.academia.loja_accenture.modulos.usuario.repository.VendedorRepository;
@@ -39,18 +41,16 @@ public class ProdutoService {
   public ProdutoDTO getById(Long id) {
     Produto produto = produtoRepository.findById(id).orElse(null);
     if (produto == null) {
-      throw new IllegalArgumentException("Produto não encontrado");
+      throw new ProdutoNotFoundException();
     }
     
     return convertToDTO(produto);
   }
   
   public Produto save(CadastrarProdutoDTO data) {
-    Vendedor vendedor = vendedorRepository.findById(data.vendedorId()).orElse(null);
-    if (vendedor == null) {
-      throw new IllegalArgumentException("Vendedor não encontrado");
-    }
-    
+    Vendedor vendedor = vendedorRepository.findById(data.vendedorId())
+          .orElseThrow(VendedorNotFoundException::new);
+
     Produto produto = new Produto();
     produto.setNome(data.nome());
     produto.setDescricao(data.descricao());
@@ -61,34 +61,30 @@ public class ProdutoService {
   }
   
   public void delete(Long vendedorId, Long produtoId) {
-    Vendedor vendedor = vendedorRepository.findById(vendedorId).orElse(null);
-    if (vendedor == null) {
-      throw new IllegalArgumentException("Vendedor não encontrado");
-    }
-    
+    Vendedor vendedor = vendedorRepository.findById(vendedorId)
+          .orElseThrow(VendedorNotFoundException::new);
+
     Produto produto = produtoRepository.findById(produtoId).orElseThrow(
-        () -> new IllegalArgumentException("Produto não encontrado"));
+        ProdutoNotFoundException::new);
     
     boolean successful = vendedor.getProdutos().remove(produto);
     if (!successful) {
-      throw new IllegalArgumentException("Produto do vendedor não encontrado");
+      throw new ProdutoNotFoundException();
     }
     
     produtoRepository.delete(produto);
   }
   
   public void update(Long vendedorId, Long produtoId, AtualizarProdutoDTO data) {
-    Vendedor vendedor = vendedorRepository.findById(vendedorId).orElse(null);
-    if (vendedor == null) {
-      throw new IllegalArgumentException("Vendedor não encontrado");
-    }
-    
+    Vendedor vendedor = vendedorRepository.findById(vendedorId)
+          .orElseThrow(VendedorNotFoundException::new);
+
     Produto produto = produtoRepository.findById(produtoId).orElseThrow(
-        () -> new IllegalArgumentException("Produto não encontrado"));
+        ProdutoNotFoundException::new);
     
     boolean successful = vendedor.getProdutos().contains(produto);
     if (!successful) {
-      throw new IllegalArgumentException("Produto do vendedor não encontrado");
+      throw new ProdutoNotFoundException();
     }
     
     if (data.nome() != null && !data.nome().trim().isEmpty()) {

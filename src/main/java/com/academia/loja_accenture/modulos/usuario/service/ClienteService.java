@@ -1,5 +1,6 @@
 package com.academia.loja_accenture.modulos.usuario.service;
 
+import com.academia.loja_accenture.core.exceptions.ClienteNotFoundException;
 import com.academia.loja_accenture.modulos.usuario.domain.Cliente;
 import com.academia.loja_accenture.modulos.usuario.dto.AtualizarClienteDTO;
 import com.academia.loja_accenture.modulos.usuario.dto.ClienteDTO;
@@ -29,7 +30,7 @@ public class ClienteService {
 
     public void update(Long clienteId, AtualizarClienteDTO data) {
         Cliente cliente = clienteRepository.findById(clienteId)
-                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado!"));
+                .orElseThrow(ClienteNotFoundException::new);
 
         if (data.nome() != null) {
             cliente.setNome(data.nome());
@@ -46,7 +47,7 @@ public class ClienteService {
 
     public ClienteDTO getById(Long id) {
         Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado!"));
+                .orElseThrow(ClienteNotFoundException::new);
 
         return convertToDTO(cliente);
     }

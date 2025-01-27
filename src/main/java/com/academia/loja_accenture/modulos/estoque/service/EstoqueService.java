@@ -1,5 +1,7 @@
 package com.academia.loja_accenture.modulos.estoque.service;
 
+import com.academia.loja_accenture.core.exceptions.EstoqueNotFoundException;
+import com.academia.loja_accenture.core.exceptions.ProdutoNotFoundException;
 import com.academia.loja_accenture.modulos.estoque.domain.Estoque;
 import com.academia.loja_accenture.modulos.estoque.dto.EstoqueRequestDTO;
 import com.academia.loja_accenture.modulos.estoque.dto.EstoqueResponseDTO;
@@ -22,7 +24,7 @@ public class EstoqueService {
     // Criar novo estoque
     public EstoqueResponseDTO createEstoque(EstoqueRequestDTO dto) {
         Produto produto = produtoRepository.findById(dto.getProdutoId())
-                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+                .orElseThrow(ProdutoNotFoundException::new);
 
         Estoque estoque = new Estoque();
         estoque.setProduto(produto);
@@ -36,7 +38,7 @@ public class EstoqueService {
     // Alterar a quantidade do estoque
     public EstoqueResponseDTO alterarQuantidade(Long estoqueId, Long quantidadeAlterada) {
         Estoque estoque = estoqueRepository.findById(estoqueId)
-                .orElseThrow(() -> new IllegalArgumentException("Estoque não encontrado"));
+                .orElseThrow(EstoqueNotFoundException::new);
 
         estoque.atualizarQuantidade(quantidadeAlterada);
         Estoque updatedEstoque = estoqueRepository.save(estoque);
@@ -46,7 +48,7 @@ public class EstoqueService {
     // Obter estoque por ID
     public EstoqueResponseDTO getEstoqueById(Long id) {
         Estoque estoque = estoqueRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Estoque não encontrado"));
+                .orElseThrow(EstoqueNotFoundException::new);
         return mapToResponseDTO(estoque);
     }
 
@@ -65,9 +67,5 @@ public class EstoqueService {
         dto.setQuantidade(estoque.getQuantidade());
         dto.setProdutoNome(estoque.getProduto().getNome());
         return dto;
-    }
-
-    public EstoqueResponseDTO createEstoque(long l, long l1) {
-        return null;
     }
 }

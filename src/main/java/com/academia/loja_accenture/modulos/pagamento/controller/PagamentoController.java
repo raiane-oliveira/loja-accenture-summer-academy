@@ -30,12 +30,6 @@ public class PagamentoController {
   )
   @GetMapping("/pagamentos/{pagamentoId}")
   public ResponseEntity<PagamentoDTO> obterPagamento(@PathVariable Long pagamentoId) {
-    try {
-      return ResponseEntity.ok(pagamentoService.getById(pagamentoId));
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.notFound().build();
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().build();
-    }
+    return ResponseEntity.ok(pagamentoService.getById(pagamentoId));
   }
 }

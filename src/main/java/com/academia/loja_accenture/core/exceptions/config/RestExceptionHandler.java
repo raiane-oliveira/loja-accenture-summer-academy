@@ -12,37 +12,37 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(ResourceNotFound.class)
   private ResponseEntity<HttpApiErrorMessage> resourceNotFoundHandler(ResourceNotFound e) {
-    return getResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    return getResponse(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 
   @ExceptionHandler(EstoqueNotFoundException.class)
   private ResponseEntity<HttpApiErrorMessage> estoqueNotFoundHandler(EstoqueNotFoundException e) {
-    return getResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    return getResponse(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 
   @ExceptionHandler(PagamentoNotFoundException.class)
   private ResponseEntity<HttpApiErrorMessage> pagamentoNotFoundHandler(PagamentoNotFoundException e) {
-    return getResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    return getResponse(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 
   @ExceptionHandler(PedidoNotFoundException.class)
   private ResponseEntity<HttpApiErrorMessage> pedidoNotFoundHandler(PedidoNotFoundException e) {
-    return getResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    return getResponse(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 
   @ExceptionHandler(ProdutoNotFoundException.class)
   private ResponseEntity<HttpApiErrorMessage> produtoNotFoundHandler(ProdutoNotFoundException e) {
-    return getResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    return getResponse(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 
   @ExceptionHandler(ClienteNotFoundException.class)
   private ResponseEntity<HttpApiErrorMessage> clienteNotFoundHandler(ClienteNotFoundException e) {
-    return getResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    return getResponse(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 
   @ExceptionHandler(VendedorNotFoundException.class)
   private ResponseEntity<HttpApiErrorMessage> vendedorNotFoundHandler(VendedorNotFoundException e) {
-    return getResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    return getResponse(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 
   @ExceptionHandler(RuntimeException.class)
@@ -51,7 +51,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   private ResponseEntity<HttpApiErrorMessage> getResponse(HttpStatus status, String message) {
-    HttpApiErrorMessage response = new HttpApiErrorMessage(HttpStatus.NOT_FOUND, message);
-    return ResponseEntity.status(status).body(response);
+    HttpApiErrorMessage response = new HttpApiErrorMessage(HttpStatus.BAD_REQUEST.value(), message);
+    return ResponseEntity.status(status.value()).body(response);
   }
 }

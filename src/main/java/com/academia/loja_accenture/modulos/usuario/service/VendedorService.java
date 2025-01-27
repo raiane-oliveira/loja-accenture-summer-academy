@@ -30,7 +30,7 @@ public class VendedorService {
 
     public void update(Long vendedorId, AtualizarVendedorDTO data) {
         Vendedor vendedor = vendedorRepository.findById(vendedorId)
-                .orElseThrow(() -> new IllegalArgumentException("Vendedor não encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Vendedor não encontrado!"));
 
         if (data.nome() != null) {
             vendedor.setNome(data.nome());
@@ -50,7 +50,7 @@ public class VendedorService {
 
     public VendedorDTO getById(Long id) {
         Vendedor vendedor = vendedorRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Vendedor não encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Vendedor não encontrado!"));
 
         return convertToDTO(vendedor);
     }

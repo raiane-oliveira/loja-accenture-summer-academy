@@ -29,18 +29,14 @@ public class PedidoService {
         Cliente cliente = clienteRepository.findById(data.clienteId())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
         Vendedor vendedor = vendedorRepository.findById(data.vendedorId())
-            .orElseThrow(() -> new IllegalArgumentException("Vendedor não encontrado"));
-        
+                .orElseThrow(() -> new IllegalArgumentException("Vendedor não encontrado"));
         List<Produto> produtos = produtoRepository.findAllById(data.produtosIds());
         if (produtos.isEmpty()) {
             throw new IllegalArgumentException("Nenhum produto encontrado");
         }
-
-        // Soma usando BigDecimal
         BigDecimal total = produtos.stream()
                 .map(Produto::getValor)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
         Pedido pedido = new Pedido();
         pedido.setCliente(cliente);
         pedido.setProdutos(produtos);
@@ -48,7 +44,6 @@ public class PedidoService {
         pedido.setVendedor(vendedor);
         pedido.setQuantidade(produtos.size());
         pedido.setDescricao(data.descricao());
-
         Pedido savedPedido = pedidoRepository.save(pedido);
         return convertToDTO(savedPedido);
     }
@@ -61,23 +56,23 @@ public class PedidoService {
 
     private PedidoDTO convertToDTO(Pedido pedido) {
         return new PedidoDTO(
-            pedido.getId(),
-            pedido.getDescricao(),
-            pedido.getValor(),
-            pedido.getQuantidade(),
-            pedido.getCliente().getId(),
-            pedido.getVendedor().getId(),
-            pedido.getProdutos().stream().map(produto ->
-                new ProdutoDTO(
-                    produto.getId(),
-                    produto.getNome(),
-                    produto.getDescricao(),
-                    produto.getValor(),
-                    produto.getCreatedAt(),
-                    produto.getVendedor().getId()
-                )
-            ).toList(),
-            pedido.getCreatedAt()
+                pedido.getId(),
+                pedido.getDescricao(),
+                pedido.getValor(),
+                pedido.getQuantidade(),
+                pedido.getCliente().getId(),
+                pedido.getVendedor().getId(),
+                pedido.getProdutos().stream().map(produto ->
+                        new ProdutoDTO(
+                                produto.getId(),
+                                produto.getNome(),
+                                produto.getDescricao(),
+                                produto.getValor(),
+                                produto.getCreatedAt(),
+                                produto.getVendedor().getId()
+                        )
+                ).toList(),
+                pedido.getCreatedAt()
         );
     }
 }

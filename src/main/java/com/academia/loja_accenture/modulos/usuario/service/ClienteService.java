@@ -29,7 +29,7 @@ public class ClienteService {
 
     public void update(Long clienteId, AtualizarClienteDTO data) {
         Cliente cliente = clienteRepository.findById(clienteId)
-                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado!"));
 
         if (data.nome() != null) {
             cliente.setNome(data.nome());
@@ -46,7 +46,7 @@ public class ClienteService {
 
     public ClienteDTO getById(Long id) {
         Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado!"));
 
         return convertToDTO(cliente);
     }

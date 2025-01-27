@@ -55,28 +55,28 @@ class PedidoServiceTest {
         Long vendedorId = 2L;
         List<Long> produtosIds = List.of(3L, 4L);
         CadastrarPedidoDTO data = new CadastrarPedidoDTO(
-            clienteId,
-            vendedorId,
-            produtosIds,
-            "Pedido de teste"
+                clienteId,
+                vendedorId,
+                produtosIds,
+                "Pedido de teste"
         );
-        
+
         Cliente cliente = new Cliente();
         cliente.setId(clienteId);
-        
+
         Vendedor vendedor = new Vendedor();
         vendedor.setId(vendedorId);
-        
+
         Produto produto1 = new Produto();
         produto1.setId(3L);
         produto1.setValor(BigDecimal.valueOf(50.00));
         produto1.setVendedor(vendedor);
-        
+
         Produto produto2 = new Produto();
         produto2.setId(4L);
         produto2.setValor(BigDecimal.valueOf(30.00));
         produto2.setVendedor(vendedor);
-        
+
         Pedido pedido = new Pedido();
         pedido.setId(10L);
         pedido.setDescricao(data.descricao());
@@ -85,14 +85,14 @@ class PedidoServiceTest {
         pedido.setProdutos(List.of(produto1, produto2));
         pedido.setValor(BigDecimal.valueOf(80.00));
         pedido.setQuantidade(2);
-        
+
         when(clienteRepository.findById(clienteId)).thenReturn(Optional.of(cliente));
         when(vendedorRepository.findById(vendedorId)).thenReturn(Optional.of(vendedor));
         when(produtoRepository.findAllById(produtosIds)).thenReturn(List.of(produto1, produto2));
         when(pedidoRepository.save(any(Pedido.class))).thenReturn(pedido);
-        
+
         PedidoDTO result = pedidoService.save(data);
-        
+
         assertNotNull(result);
         assertEquals(10L, result.id());
         assertEquals("Pedido de teste", result.descricao());
@@ -110,19 +110,19 @@ class PedidoServiceTest {
         Long vendedorId = 2L;
         List<Long> produtosIds = List.of(3L, 4L);
         CadastrarPedidoDTO data = new CadastrarPedidoDTO(
-            clienteId,
-            vendedorId,
-            produtosIds,
-            "Pedido de teste"
+                clienteId,
+                vendedorId,
+                produtosIds,
+                "Pedido de teste"
         );
-        
+
         when(clienteRepository.findById(clienteId)).thenReturn(Optional.empty());
-        
+
         IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> pedidoService.save(data)
+                IllegalArgumentException.class,
+                () -> pedidoService.save(data)
         );
-        
+
         assertEquals("Cliente não encontrado", exception.getMessage());
     }
 
@@ -132,20 +132,20 @@ class PedidoServiceTest {
         Long vendedorId = 2L;
         List<Long> produtosIds = List.of(3L, 4L);
         CadastrarPedidoDTO data = new CadastrarPedidoDTO(
-            clienteId,
-            vendedorId,
-            produtosIds,
-            "Pedido de teste"
+                clienteId,
+                vendedorId,
+                produtosIds,
+                "Pedido de teste"
         );
         Cliente cliente = new Cliente();
         cliente.setId(clienteId);
-        
+
         when(clienteRepository.findById(clienteId)).thenReturn(Optional.of(cliente));
         when(vendedorRepository.findById(vendedorId)).thenReturn(Optional.empty());
-        
+
         IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> pedidoService.save(data)
+                IllegalArgumentException.class,
+                () -> pedidoService.save(data)
         );
 
         assertEquals("Vendedor não encontrado", exception.getMessage());
@@ -157,28 +157,28 @@ class PedidoServiceTest {
         Long vendedorId = 2L;
         List<Long> produtosIds = List.of(3L, 4L);
         CadastrarPedidoDTO data = new CadastrarPedidoDTO(
-            clienteId,
-            vendedorId,
-            produtosIds,
-            "Pedido de teste"
+                clienteId,
+                vendedorId,
+                produtosIds,
+                "Pedido de teste"
         );
-        
+
         Cliente cliente = new Cliente();
         cliente.setId(clienteId);
-        
+
         Vendedor vendedor = new Vendedor();
         vendedor.setId(vendedorId);
-        
+
         when(clienteRepository.findById(clienteId)).thenReturn(Optional.of(cliente));
         when(vendedorRepository.findById(vendedorId)).thenReturn(Optional.of(vendedor));
         when(produtoRepository.findAllById(produtosIds)).thenReturn(List.of());
-        
+
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> pedidoService.save(data)
+                IllegalArgumentException.class,
+                () -> pedidoService.save(data)
         );
-        
+
         assertEquals("Nenhum produto encontrado", exception.getMessage());
     }
 
@@ -186,7 +186,7 @@ class PedidoServiceTest {
     void shouldGetPedidoById() {
         Cliente cliente = MakeCliente.create();
         Vendedor vendedor = MakeVendedor.create();
-        
+
         Produto produto1 = new Produto();
         produto1.setId(1L);
         produto1.setNome("Produto Teste 2");
@@ -194,7 +194,7 @@ class PedidoServiceTest {
         produto1.setValor(BigDecimal.valueOf(10.0));
         produto1.setVendedor(vendedor);
         when(produtoRepository.findById(1L)).thenReturn(Optional.of(produto1));
-        
+
         Produto produto2 = new Produto();
         produto2.setId(2L);
         produto2.setNome("Produto Teste 2");
@@ -211,7 +211,7 @@ class PedidoServiceTest {
         pedido.setProdutos(List.of(produto1, produto2));
         pedido.setValor(produto1.getValor().add(produto2.getValor()));
         pedido.setQuantidade(2);
-        
+
         when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
 
         PedidoDTO fetchedPedido = pedidoService.getById(1L);
@@ -226,7 +226,7 @@ class PedidoServiceTest {
     @Test
     void shouldThrowExceptionWhenPedidoNotFound() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-            () -> pedidoService.getById(999L)
+                () -> pedidoService.getById(999L)
         );
 
         assertEquals("Pedido não encontrado", exception.getMessage());

@@ -11,23 +11,31 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 public class Estoque {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  
+
   @Column(nullable = false)
   private String name;
-  
+
   @Column(nullable = false)
   private Long quantidade;
-  
+
   @Column(name = "created_at", nullable = false)
   @CreatedDate
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime createdAt = LocalDateTime.now();
-  
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "produto_id", unique = true)
-  private Produto produto;
-}
 
+  @ManyToOne
+  @JoinColumn(name = "produto_id", unique = true, nullable = false)
+  private Produto produto;
+
+  // Atualizar quantidade do estoque (incrementar/decrementar)
+  public void atualizarQuantidade(Long quantidadeAlterada) {
+    if (this.quantidade + quantidadeAlterada < 0) {
+      throw new IllegalArgumentException("Quantidade insuficiente no estoque.");
+    }
+    this.quantidade += quantidadeAlterada;
+  }
+}

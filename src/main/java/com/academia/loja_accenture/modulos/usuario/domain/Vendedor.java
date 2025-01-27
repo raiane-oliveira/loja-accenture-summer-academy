@@ -36,4 +36,13 @@ public class Vendedor {
 
     @OneToMany(mappedBy = "vendedor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Pedido> pedidos = new HashSet<>();
+
+    public Vendedor() {} // Construtor padrão, necessário para JPA/Jackson.
+
+    public Vendedor(String nome, String setor, String email, String senha) {
+        this.nome = nome;
+        this.setor = setor;
+        this.email = email;
+        this.senha = senha;
+    }
 }

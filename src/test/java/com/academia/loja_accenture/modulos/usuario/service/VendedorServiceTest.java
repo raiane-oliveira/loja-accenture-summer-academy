@@ -1,5 +1,6 @@
 package com.academia.loja_accenture.modulos.usuario.service;
 
+import com.academia.loja_accenture.core.exceptions.VendedorNotFoundException;
 import com.academia.loja_accenture.modulos.usuario.domain.Vendedor;
 import com.academia.loja_accenture.modulos.usuario.dto.RegistrarVendedorDTO;
 import com.academia.loja_accenture.modulos.usuario.dto.VendedorDTO;
@@ -77,7 +78,7 @@ class VendedorServiceTest {
     void deveLancarExcecaoQuandoVendedorNaoExistir() {
         when(vendedorRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> vendedorService.getById(1L));
+        assertThrows(VendedorNotFoundException.class, () -> vendedorService.getById(1L));
         verify(vendedorRepository, times(1)).findById(1L);
     }
 }

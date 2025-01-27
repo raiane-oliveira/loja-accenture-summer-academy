@@ -1,5 +1,9 @@
 package com.academia.loja_accenture.modulos.pedido;
 
+import com.academia.loja_accenture.core.exceptions.ClienteNotFoundException;
+import com.academia.loja_accenture.core.exceptions.PedidoNotFoundException;
+import com.academia.loja_accenture.core.exceptions.ProdutoNotFoundException;
+import com.academia.loja_accenture.core.exceptions.VendedorNotFoundException;
 import com.academia.loja_accenture.factory.MakeCliente;
 import com.academia.loja_accenture.factory.MakeVendedor;
 import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
@@ -118,8 +122,8 @@ class PedidoServiceTest {
 
         when(clienteRepository.findById(clienteId)).thenReturn(Optional.empty());
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        ClienteNotFoundException exception = assertThrows(
+                ClienteNotFoundException.class,
                 () -> pedidoService.save(data)
         );
 
@@ -143,8 +147,8 @@ class PedidoServiceTest {
         when(clienteRepository.findById(clienteId)).thenReturn(Optional.of(cliente));
         when(vendedorRepository.findById(vendedorId)).thenReturn(Optional.empty());
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        VendedorNotFoundException exception = assertThrows(
+                VendedorNotFoundException.class,
                 () -> pedidoService.save(data)
         );
 
@@ -173,13 +177,7 @@ class PedidoServiceTest {
         when(vendedorRepository.findById(vendedorId)).thenReturn(Optional.of(vendedor));
         when(produtoRepository.findAllById(produtosIds)).thenReturn(List.of());
 
-        // Act & Assert
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> pedidoService.save(data)
-        );
-
-        assertEquals("Nenhum produto encontrado", exception.getMessage());
+         assertThrows(ProdutoNotFoundException.class, () -> pedidoService.save(data));
     }
 
     @Test
@@ -225,7 +223,7 @@ class PedidoServiceTest {
 
     @Test
     void shouldThrowExceptionWhenPedidoNotFound() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+        PedidoNotFoundException exception = assertThrows(PedidoNotFoundException.class,
                 () -> pedidoService.getById(999L)
         );
 

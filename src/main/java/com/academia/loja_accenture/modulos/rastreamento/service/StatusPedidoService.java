@@ -1,5 +1,7 @@
 package com.academia.loja_accenture.modulos.rastreamento.service;
 
+import com.academia.loja_accenture.core.exceptions.PedidoNotFoundException;
+import com.academia.loja_accenture.core.exceptions.ResourceNotFound;
 import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
 import com.academia.loja_accenture.modulos.pedido.repository.PedidoRepository;
 import com.academia.loja_accenture.modulos.rastreamento.domain.PedidoStatusHistorico;
@@ -29,7 +31,7 @@ public class StatusPedidoService {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> {
                     log.error("Pedido não encontrado com o ID: {}", pedidoId);
-                    return new RuntimeException("Pedido não encontrado com o ID " + pedidoId);
+                    return new PedidoNotFoundException("Pedido não encontrado com o ID " + pedidoId);
                 });
 
         log.info("Pedido encontrado com ID: {}", pedidoId);
@@ -57,7 +59,7 @@ public class StatusPedidoService {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> {
                     log.error("Pedido não encontrado com o ID: {}", pedidoId);
-                    return new RuntimeException("Pedido não encontrado com o ID " + pedidoId);
+                    return new PedidoNotFoundException("Pedido não encontrado com o ID " + pedidoId);
                 });
 
         log.info("Histórico de status encontrado para o pedido ID: {}", pedidoId);
@@ -77,7 +79,7 @@ public class StatusPedidoService {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> {
                     log.error("Pedido não encontrado com o ID: {}", pedidoId);
-                    return new RuntimeException("Pedido não encontrado com o ID " + pedidoId);
+                    return new PedidoNotFoundException("Pedido não encontrado com o ID " + pedidoId);
                 });
 
         return pedido.getHistoricoStatus().stream()
@@ -93,7 +95,7 @@ public class StatusPedidoService {
                 })
                 .orElseThrow(() -> {
                     log.error("Nenhum status encontrado para o pedido com ID: {}", pedidoId);
-                    return new RuntimeException("Nenhum status encontrado para o pedido com ID " + pedidoId);
+                    return new ResourceNotFound("Nenhum status encontrado para o pedido com ID " + pedidoId);
                 });
     }
 }

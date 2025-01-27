@@ -1,5 +1,7 @@
 package com.academia.loja_accenture.modulos.pagamento.service;
 
+import com.academia.loja_accenture.core.exceptions.PagamentoNotFoundException;
+import com.academia.loja_accenture.core.exceptions.PedidoNotFoundException;
 import com.academia.loja_accenture.modulos.pagamento.domain.Pagamento;
 import com.academia.loja_accenture.modulos.pagamento.dto.AtualizarPagamentoDTO;
 import com.academia.loja_accenture.modulos.pagamento.dto.PagamentoDTO;
@@ -18,7 +20,7 @@ public class PagamentoService {
   
   public PagamentoDTO save(RegistrarPagamentoDTO data) {
     Pedido pedido = pedidoRepository.findById(data.pedidoId())
-        .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado"));
+        .orElseThrow(PedidoNotFoundException::new);
     
     Pagamento pagamento = new Pagamento();
     pagamento.setStatus(data.status());
@@ -31,15 +33,13 @@ public class PagamentoService {
   }
   
   public void update(Long pedidoId, Long pagamentoId, AtualizarPagamentoDTO data) {
-    Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(
-        () -> new IllegalArgumentException("Pedido não encontrado"));
+    Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(PedidoNotFoundException::new);
     
-    Pagamento pagamento = pagamentoRepository.findById(pagamentoId).orElseThrow(
-        () -> new IllegalArgumentException("Pagamento não encontrado"));
+    Pagamento pagamento = pagamentoRepository.findById(pagamentoId).orElseThrow(PagamentoNotFoundException::new);
     
     boolean successful = pedido.getPagamento().equals(pagamento);
     if (!successful) {
-      throw new IllegalArgumentException("Pagamento do pedido " + pedidoId + " não encontrado");
+      throw new PagamentoNotFoundException("Pagamento do pedido " + pedidoId + " não encontrado");
     }
     
     if (data.status() != null) {
@@ -56,8 +56,7 @@ public class PagamentoService {
   }
   
   public PagamentoDTO getById(Long id) {
-    Pagamento pagamento = pagamentoRepository.findById(id).orElseThrow(
-        () -> new IllegalArgumentException("Pagamento não encontrado"));
+    Pagamento pagamento = pagamentoRepository.findById(id).orElseThrow(PagamentoNotFoundException::new);
     
     return convertToDTO(pagamento);
   }

@@ -31,12 +31,8 @@ public class VendedorController {
     )
     @PostMapping
     public ResponseEntity<VendedorDTO> cadastrarVendedor(@Valid @RequestBody RegistrarVendedorDTO data) {
-        try {
-            VendedorDTO novoVendedor = vendedorService.save(data);
-            return ResponseEntity.ok(novoVendedor);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        VendedorDTO novoVendedor = vendedorService.save(data);
+        return ResponseEntity.ok(novoVendedor);
     }
 
     @Operation(
@@ -49,12 +45,8 @@ public class VendedorController {
     )
     @GetMapping
     public ResponseEntity<List<VendedorDTO>> listarVendedores() {
-        try {
-            List<VendedorDTO> vendedores = vendedorService.listarTodos();
-            return ResponseEntity.ok(vendedores);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        List<VendedorDTO> vendedores = vendedorService.listarTodos();
+        return ResponseEntity.ok(vendedores);
     }
 
     @Operation(
@@ -68,14 +60,8 @@ public class VendedorController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<VendedorDTO> buscarVendedorPorId(@PathVariable Long id) {
-        try {
-            VendedorDTO vendedor = vendedorService.getById(id);
-            return ResponseEntity.ok(vendedor);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        VendedorDTO vendedor = vendedorService.getById(id);
+        return ResponseEntity.ok(vendedor);
     }
 
     @Operation(
@@ -89,13 +75,7 @@ public class VendedorController {
     )
     @PutMapping("/{id}")
     public ResponseEntity<Void> atualizarVendedor(@PathVariable Long id, @Valid @RequestBody AtualizarVendedorDTO data) {
-        try {
-            vendedorService.update(id, data);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        vendedorService.update(id, data);
+        return ResponseEntity.noContent().build();
     }
 }

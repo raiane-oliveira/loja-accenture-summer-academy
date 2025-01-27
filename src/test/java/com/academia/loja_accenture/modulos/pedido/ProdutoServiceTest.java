@@ -1,6 +1,8 @@
 package com.academia.loja_accenture.modulos.pedido;
 
 import com.academia.loja_accenture.core.PaginationParams;
+import com.academia.loja_accenture.core.exceptions.ProdutoNotFoundException;
+import com.academia.loja_accenture.core.exceptions.VendedorNotFoundException;
 import com.academia.loja_accenture.factory.MakeProduto;
 import com.academia.loja_accenture.factory.MakeVendedor;
 import com.academia.loja_accenture.modulos.pedido.domain.Produto;
@@ -88,7 +90,7 @@ class ProdutoServiceTest {
     void shouldThrowExceptionWhenProductNotFound() {
         when(produtoRepository.findById(1L)).thenReturn(Optional.empty());
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> produtoService.getById(1L));
+        ProdutoNotFoundException exception = assertThrows(ProdutoNotFoundException.class, () -> produtoService.getById(1L));
 
         assertEquals("Produto não encontrado", exception.getMessage());
     }
@@ -123,7 +125,7 @@ class ProdutoServiceTest {
 
         when(vendedorRepository.findById(1L)).thenReturn(Optional.empty());
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> produtoService.save(data));
+        VendedorNotFoundException exception = assertThrows(VendedorNotFoundException.class, () -> produtoService.save(data));
 
         assertEquals("Vendedor não encontrado", exception.getMessage());
     }
@@ -150,7 +152,7 @@ class ProdutoServiceTest {
         assertEquals("Produto atualizado", updatedProduct.get().getNome());
         assertEquals(BigDecimal.TEN, updatedProduct.get().getValor());
     }
-s
+
     @Test
     void shouldThrowExceptionWhenUpdateProductWithInvalidVendedor() {
         Vendedor vendedor = MakeVendedor.create();
@@ -170,9 +172,7 @@ s
 
         AtualizarProdutoDTO data = new AtualizarProdutoDTO("Produto atualizado", null, BigDecimal.TEN);
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+         assertThrows(ProdutoNotFoundException.class,
                 () -> produtoService.update(vendedor2.getId(), produto.getId(), data));
-
-        assertEquals("Produto do vendedor não encontrado", exception.getMessage());
     }
 }

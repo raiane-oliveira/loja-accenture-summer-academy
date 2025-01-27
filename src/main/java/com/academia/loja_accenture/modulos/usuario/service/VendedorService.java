@@ -1,5 +1,6 @@
 package com.academia.loja_accenture.modulos.usuario.service;
 
+import com.academia.loja_accenture.core.exceptions.VendedorNotFoundException;
 import com.academia.loja_accenture.modulos.usuario.domain.Vendedor;
 import com.academia.loja_accenture.modulos.usuario.dto.AtualizarVendedorDTO;
 import com.academia.loja_accenture.modulos.usuario.dto.RegistrarVendedorDTO;
@@ -30,7 +31,7 @@ public class VendedorService {
 
     public void update(Long vendedorId, AtualizarVendedorDTO data) {
         Vendedor vendedor = vendedorRepository.findById(vendedorId)
-                .orElseThrow(() -> new IllegalArgumentException("Vendedor não encontrado!"));
+                .orElseThrow(VendedorNotFoundException::new);
 
         if (data.nome() != null) {
             vendedor.setNome(data.nome());
@@ -50,7 +51,7 @@ public class VendedorService {
 
     public VendedorDTO getById(Long id) {
         Vendedor vendedor = vendedorRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Vendedor não encontrado!"));
+                .orElseThrow(VendedorNotFoundException::new);
 
         return convertToDTO(vendedor);
     }

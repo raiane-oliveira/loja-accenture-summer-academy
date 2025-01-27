@@ -31,12 +31,8 @@ public class ClienteController {
     )
     @PostMapping
     public ResponseEntity<ClienteDTO> cadastrarCliente(@Valid @RequestBody RegistrarClienteDTO data) {
-        try {
-            ClienteDTO novoCliente = clienteService.save(data);
-            return ResponseEntity.ok(novoCliente);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        ClienteDTO novoCliente = clienteService.save(data);
+        return ResponseEntity.ok(novoCliente);
     }
 
     @Operation(
@@ -49,12 +45,8 @@ public class ClienteController {
     )
     @GetMapping
     public ResponseEntity<List<ClienteDTO>> listarClientes() {
-        try {
-            List<ClienteDTO> clientes = clienteService.listarTodos();
-            return ResponseEntity.ok(clientes);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        List<ClienteDTO> clientes = clienteService.listarTodos();
+        return ResponseEntity.ok(clientes);
     }
 
     @Operation(
@@ -68,14 +60,8 @@ public class ClienteController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<ClienteDTO> buscarClientePorId(@PathVariable Long id) {
-        try {
-            ClienteDTO cliente = clienteService.getById(id);
-            return ResponseEntity.ok(cliente);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        ClienteDTO cliente = clienteService.getById(id);
+        return ResponseEntity.ok(cliente);
     }
 
     @Operation(
@@ -89,13 +75,7 @@ public class ClienteController {
     )
     @PutMapping("/{id}")
     public ResponseEntity<Void> atualizarCliente(@PathVariable Long id, @Valid @RequestBody AtualizarClienteDTO data) {
-        try {
-            clienteService.update(id, data);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        clienteService.update(id, data);
+        return ResponseEntity.noContent().build();
     }
 }

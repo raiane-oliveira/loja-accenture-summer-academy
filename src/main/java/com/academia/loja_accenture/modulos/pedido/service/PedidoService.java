@@ -1,5 +1,9 @@
 package com.academia.loja_accenture.modulos.pedido.service;
 
+import com.academia.loja_accenture.core.exceptions.ClienteNotFoundException;
+import com.academia.loja_accenture.core.exceptions.PedidoNotFoundException;
+import com.academia.loja_accenture.core.exceptions.ProdutoNotFoundException;
+import com.academia.loja_accenture.core.exceptions.VendedorNotFoundException;
 import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
 import com.academia.loja_accenture.modulos.pedido.domain.Produto;
 import com.academia.loja_accenture.modulos.pedido.dto.CadastrarPedidoDTO;
@@ -27,16 +31,19 @@ public class PedidoService {
 
     public PedidoDTO save(CadastrarPedidoDTO data) {
         Cliente cliente = clienteRepository.findById(data.clienteId())
-                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
+                .orElseThrow(ClienteNotFoundException::new);
         Vendedor vendedor = vendedorRepository.findById(data.vendedorId())
-                .orElseThrow(() -> new IllegalArgumentException("Vendedor não encontrado"));
+                .orElseThrow(VendedorNotFoundException::new);
+
         List<Produto> produtos = produtoRepository.findAllById(data.produtosIds());
         if (produtos.isEmpty()) {
-            throw new IllegalArgumentException("Nenhum produto encontrado");
+            throw new ProdutoNotFoundException();
         }
+
         BigDecimal total = produtos.stream()
                 .map(Produto::getValor)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         Pedido pedido = new Pedido();
         pedido.setCliente(cliente);
         pedido.setProdutos(produtos);
@@ -44,13 +51,14 @@ public class PedidoService {
         pedido.setVendedor(vendedor);
         pedido.setQuantidade(produtos.size());
         pedido.setDescricao(data.descricao());
+
         Pedido savedPedido = pedidoRepository.save(pedido);
         return convertToDTO(savedPedido);
     }
 
     public PedidoDTO getById(Long id) {
         Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado"));
+                .orElseThrow(PedidoNotFoundException::new);
         return convertToDTO(pedido);
     }
 

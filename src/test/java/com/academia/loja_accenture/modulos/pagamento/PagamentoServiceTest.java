@@ -1,5 +1,7 @@
 package com.academia.loja_accenture.modulos.pagamento;
 
+import com.academia.loja_accenture.core.exceptions.PagamentoNotFoundException;
+import com.academia.loja_accenture.core.exceptions.PedidoNotFoundException;
 import com.academia.loja_accenture.modulos.pagamento.domain.MetodoPagamento;
 import com.academia.loja_accenture.modulos.pagamento.domain.Pagamento;
 import com.academia.loja_accenture.modulos.pagamento.domain.StatusPagamento;
@@ -86,7 +88,7 @@ class PagamentoServiceTest {
     
     when(pedidoRepository.findById(pedidoId)).thenReturn(Optional.empty());
     
-    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+    PedidoNotFoundException exception = assertThrows(PedidoNotFoundException.class,
         () -> pagamentoService.save(data));
     
     assertEquals("Pedido não encontrado", exception.getMessage());
@@ -140,9 +142,9 @@ class PagamentoServiceTest {
     
     when(pedidoRepository.findById(pedidoId)).thenReturn(Optional.empty());
     
-    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+    PedidoNotFoundException exception = assertThrows(PedidoNotFoundException.class,
         () -> pagamentoService.update(pedidoId, pagamentoId, data));
-    
+
     assertEquals("Pedido não encontrado", exception.getMessage());
   }
   
@@ -163,9 +165,9 @@ class PagamentoServiceTest {
     when(pedidoRepository.findById(pedidoId)).thenReturn(Optional.of(pedido));
     when(pagamentoRepository.findById(pagamentoId)).thenReturn(Optional.empty());
     
-    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+    PagamentoNotFoundException exception = assertThrows(PagamentoNotFoundException.class,
         () -> pagamentoService.update(pedidoId, pagamentoId, data));
-    
+
     assertEquals("Pagamento não encontrado", exception.getMessage());
   }
   
@@ -195,7 +197,7 @@ class PagamentoServiceTest {
     when(pedidoRepository.findById(pedidoId)).thenReturn(Optional.of(pedido));
     when(pagamentoRepository.findById(pagamentoId)).thenReturn(Optional.of(pagamento));
     
-    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+    PagamentoNotFoundException exception = assertThrows(PagamentoNotFoundException.class,
         () -> pagamentoService.update(pedidoId, pagamentoId, data));
     
     assertEquals("Pagamento do pedido " + pedidoId + " não encontrado", exception.getMessage());
@@ -225,7 +227,7 @@ class PagamentoServiceTest {
     
     when(pagamentoRepository.findById(pagamentoId)).thenReturn(Optional.empty());
     
-    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+    PagamentoNotFoundException exception = assertThrows(PagamentoNotFoundException.class,
         () -> pagamentoService.getById(pagamentoId));
     
     assertEquals("Pagamento não encontrado", exception.getMessage());

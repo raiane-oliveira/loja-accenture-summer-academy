@@ -49,14 +49,8 @@ public class PedidoController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<PedidoDTO> obterPedido(@PathVariable Long id) {
-        try {
-            PedidoDTO pedido = pedidoService.getById(id);
-            return ResponseEntity.ok(pedido);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        PedidoDTO pedido = pedidoService.getById(id);
+        return ResponseEntity.ok(pedido);
     }
 }
 

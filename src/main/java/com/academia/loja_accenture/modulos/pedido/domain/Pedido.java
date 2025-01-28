@@ -48,10 +48,29 @@ public class Pedido {
   @JoinColumn(name = "vendedor_id")
   private Vendedor vendedor;
 
-  @ManyToMany(mappedBy = "pedidos")
-  private List<Produto> produtos = new ArrayList<>();
+//  @ManyToMany
+//  @JoinTable(
+//      name = "pedido_tem_produtos",
+//      joinColumns = @JoinColumn(name = "pedido_id", nullable = false),
+//      inverseJoinColumns = @JoinColumn(name = "produto_id", nullable = false)
+//  )
+//  private Set<Produto> produtos = new HashSet<>();
+  
+  @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<PedidoTemProdutos> pedidoTemProdutos = new ArrayList<>();
+  
+  public void addProduto(Produto produto, int quantidade) {
+    PedidoTemProdutos pedidoTemProdutos = new PedidoTemProdutos();
+    pedidoTemProdutos.setId(new PedidoTemProdutosId(this.id, produto.getId()));
+    pedidoTemProdutos.setPedido(this);
+    pedidoTemProdutos.setProduto(produto);
+    pedidoTemProdutos.setQuantidadeProduto(quantidade);
+    
+    this.pedidoTemProdutos.add(pedidoTemProdutos);
+    produto.getPedidoTemProdutos().add(pedidoTemProdutos);
+  }
 
-  @ManyToMany(cascade = CascadeType.ALL)
+  @ManyToMany
   @JoinTable(
           name = "pedido_historico_status",
           joinColumns = @JoinColumn(name = "pedido_id"),

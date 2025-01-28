@@ -1,30 +1,3 @@
-ALTER TABLE produto
-    DROP FOREIGN KEY FK_PRODUTO_ON_ESTOQUE;
-
-ALTER TABLE estoque
-    ADD CONSTRAINT uc_estoque_produto UNIQUE (produto_id);
-
-ALTER TABLE estoque
-    ADD CONSTRAINT FK_ESTOQUE_ON_PRODUTO FOREIGN KEY (produto_id) REFERENCES produto (id);
-
-ALTER TABLE pedido_historico_status
-    ADD CONSTRAINT fk_pedhissta_on_pedido FOREIGN KEY (pedido_id) REFERENCES pedido (id);
-
-ALTER TABLE pedido_historico_status
-    ADD CONSTRAINT fk_pedhissta_on_status_pedido FOREIGN KEY (status_pedido_id) REFERENCES status_pedido (id);
-
-ALTER TABLE produto_tem_pedido
-    ADD CONSTRAINT fk_protemped_on_pedido FOREIGN KEY (pedido_id) REFERENCES pedido (id);
-
-ALTER TABLE produto_tem_pedido
-    ADD CONSTRAINT fk_protemped_on_produto FOREIGN KEY (produto_id) REFERENCES produto (id);
-
-ALTER TABLE produto
-    DROP COLUMN estoque_id;
-
-ALTER TABLE produto
-    MODIFY created_at datetime NULL;
-
 ALTER TABLE pagamento
     MODIFY data_pagamento datetime NULL;
 

@@ -3,6 +3,7 @@ package com.academia.loja_accenture.modulos.estoque.service;
 import com.academia.loja_accenture.core.exceptions.EstoqueNotFoundException;
 import com.academia.loja_accenture.core.exceptions.ProdutoNotFoundException;
 import com.academia.loja_accenture.modulos.estoque.domain.Estoque;
+import com.academia.loja_accenture.modulos.pedido.dto.ProdutoComQuantidadeDTO;
 import com.academia.loja_accenture.modulos.estoque.dto.EstoqueRequestDTO;
 import com.academia.loja_accenture.modulos.estoque.dto.EstoqueResponseDTO;
 import com.academia.loja_accenture.modulos.estoque.repository.EstoqueRepository;
@@ -44,7 +45,17 @@ public class EstoqueService {
         Estoque updatedEstoque = estoqueRepository.save(estoque);
         return mapToResponseDTO(updatedEstoque);
     }
-
+    
+    public void diminuirQuantidadePorProdutosId(List<ProdutoComQuantidadeDTO> data) {
+        data.forEach((produto) -> {
+            Estoque estoque = estoqueRepository.findByProdutoId(produto.id()).orElseThrow(ProdutoNotFoundException::new);
+            
+            // Converte quantidade para negativo
+            estoque.atualizarQuantidade((long) produto.quantidade() * -1);
+            estoqueRepository.save(estoque);
+        });
+    }
+    
     // Obter estoque por ID
     public EstoqueResponseDTO getEstoqueById(Long id) {
         Estoque estoque = estoqueRepository.findById(id)

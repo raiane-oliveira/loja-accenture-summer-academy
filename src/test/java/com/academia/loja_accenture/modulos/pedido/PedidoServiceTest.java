@@ -10,6 +10,7 @@ import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
 import com.academia.loja_accenture.modulos.pedido.domain.Produto;
 import com.academia.loja_accenture.modulos.pedido.dto.CadastrarPedidoDTO;
 import com.academia.loja_accenture.modulos.pedido.dto.PedidoDTO;
+import com.academia.loja_accenture.modulos.pedido.dto.ProdutoComQuantidadeDTO;
 import com.academia.loja_accenture.modulos.pedido.repository.PedidoRepository;
 import com.academia.loja_accenture.modulos.pedido.repository.ProdutoRepository;
 import com.academia.loja_accenture.modulos.pedido.service.PedidoService;
@@ -17,11 +18,13 @@ import com.academia.loja_accenture.modulos.usuario.domain.Cliente;
 import com.academia.loja_accenture.modulos.usuario.domain.Vendedor;
 import com.academia.loja_accenture.modulos.usuario.repository.ClienteRepository;
 import com.academia.loja_accenture.modulos.usuario.repository.VendedorRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.amqp.core.AmqpTemplate;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -44,9 +47,15 @@ class PedidoServiceTest {
 
     @Mock
     private ClienteRepository clienteRepository;
-
+    
     @Mock
     private VendedorRepository vendedorRepository;
+
+    @Mock
+    private AmqpTemplate amqpTemplate;
+    
+    @Mock
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setup() {
@@ -57,11 +66,16 @@ class PedidoServiceTest {
     void shouldSavePedidoSuccessfully() {
         Long clienteId = 1L;
         Long vendedorId = 2L;
-        List<Long> produtosIds = List.of(3L, 4L);
+        List<ProdutoComQuantidadeDTO> produtosComQuant = List.of(
+            new ProdutoComQuantidadeDTO(3L, 1),
+            new ProdutoComQuantidadeDTO(4L, 1)
+        );
+        List<Long> produtosIds = produtosComQuant.stream().map(ProdutoComQuantidadeDTO::id).toList();
+        
         CadastrarPedidoDTO data = new CadastrarPedidoDTO(
                 clienteId,
                 vendedorId,
-                produtosIds,
+                produtosComQuant,
                 "Pedido de teste"
         );
 
@@ -86,7 +100,8 @@ class PedidoServiceTest {
         pedido.setDescricao(data.descricao());
         pedido.setCliente(cliente);
         pedido.setVendedor(vendedor);
-        pedido.setProdutos(List.of(produto1, produto2));
+        pedido.addProduto(produto1, 1);
+        pedido.addProduto(produto2, 1);
         pedido.setValor(BigDecimal.valueOf(80.00));
         pedido.setQuantidade(2);
 
@@ -112,11 +127,14 @@ class PedidoServiceTest {
     void shouldThrowExceptionWhenClienteNotFound() {
         Long clienteId = 1L;
         Long vendedorId = 2L;
-        List<Long> produtosIds = List.of(3L, 4L);
+        List<ProdutoComQuantidadeDTO> produtosComQuant = List.of(
+            new ProdutoComQuantidadeDTO(3L, 1),
+            new ProdutoComQuantidadeDTO(4L, 1)
+        );
         CadastrarPedidoDTO data = new CadastrarPedidoDTO(
                 clienteId,
                 vendedorId,
-                produtosIds,
+                produtosComQuant,
                 "Pedido de teste"
         );
 
@@ -134,11 +152,14 @@ class PedidoServiceTest {
     void shouldThrowExceptionWhenVendedorNotFound() {
         Long clienteId = 1L;
         Long vendedorId = 2L;
-        List<Long> produtosIds = List.of(3L, 4L);
+        List<ProdutoComQuantidadeDTO> produtosComQuant = List.of(
+            new ProdutoComQuantidadeDTO(3L, 1),
+            new ProdutoComQuantidadeDTO(4L, 1)
+        );
         CadastrarPedidoDTO data = new CadastrarPedidoDTO(
                 clienteId,
                 vendedorId,
-                produtosIds,
+                produtosComQuant,
                 "Pedido de teste"
         );
         Cliente cliente = new Cliente();
@@ -159,11 +180,15 @@ class PedidoServiceTest {
     void shouldThrowExceptionWhenNoProductsFound() {
         Long clienteId = 1L;
         Long vendedorId = 2L;
-        List<Long> produtosIds = List.of(3L, 4L);
+        List<ProdutoComQuantidadeDTO> produtosComQuant = List.of(
+            new ProdutoComQuantidadeDTO(3L, 1),
+            new ProdutoComQuantidadeDTO(4L, 1)
+        );
+        List<Long> produtosIds = produtosComQuant.stream().map(ProdutoComQuantidadeDTO::id).toList();
         CadastrarPedidoDTO data = new CadastrarPedidoDTO(
                 clienteId,
                 vendedorId,
-                produtosIds,
+                produtosComQuant,
                 "Pedido de teste"
         );
 
@@ -206,7 +231,8 @@ class PedidoServiceTest {
         pedido.setDescricao("Pedido de teste");
         pedido.setCliente(cliente);
         pedido.setVendedor(vendedor);
-        pedido.setProdutos(List.of(produto1, produto2));
+        pedido.addProduto(produto1, 1);
+        pedido.addProduto(produto2, 1);
         pedido.setValor(produto1.getValor().add(produto2.getValor()));
         pedido.setQuantidade(2);
 

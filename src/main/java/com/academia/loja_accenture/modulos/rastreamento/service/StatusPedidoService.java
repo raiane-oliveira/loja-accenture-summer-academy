@@ -4,13 +4,13 @@ import com.academia.loja_accenture.core.exceptions.PedidoNotFoundException;
 import com.academia.loja_accenture.core.exceptions.ResourceNotFound;
 import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
 import com.academia.loja_accenture.modulos.pedido.repository.PedidoRepository;
-import com.academia.loja_accenture.modulos.rastreamento.domain.PedidoStatusHistorico;
 import com.academia.loja_accenture.modulos.rastreamento.dto.RegistrarStatusRequestDTO;
 import com.academia.loja_accenture.modulos.rastreamento.dto.RegistrarStatusResponseDTO;
 import com.academia.loja_accenture.modulos.rastreamento.repository.PedidoStatusHistoricoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -25,6 +25,7 @@ public class StatusPedidoService {
     private final PedidoRepository pedidoRepository;
     private final PedidoStatusHistoricoRepository pedidoStatusHistoricoRepository;
 
+    @Transactional
     public RegistrarStatusResponseDTO registrarStatus(Long pedidoId, RegistrarStatusRequestDTO request) {
         log.info("Iniciando registro de status para o pedido com ID: {}", pedidoId);
 

@@ -10,6 +10,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+  @ExceptionHandler(InvalidJsonException.class)
+  private ResponseEntity<HttpApiErrorMessage> invalidJsonExceptionHandler(InvalidJsonException e) {
+    return getResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+  }
+  
   @ExceptionHandler(ResourceNotFound.class)
   private ResponseEntity<HttpApiErrorMessage> resourceNotFoundHandler(ResourceNotFound e) {
     return getResponse(HttpStatus.BAD_REQUEST, e.getMessage());

@@ -40,7 +40,7 @@ public class Pagamento {
     @CreationTimestamp
     private LocalDateTime createdAt;
     
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "pedido_id", nullable = false)
     private Pedido pedido;
 }

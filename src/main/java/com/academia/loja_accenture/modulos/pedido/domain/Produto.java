@@ -9,7 +9,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "produto")
@@ -39,11 +41,18 @@ public class Produto {
   @OneToMany(mappedBy = "produto")
   private List<Estoque> estoques;
   
-  @ManyToMany(cascade = CascadeType.ALL)
-  @JoinTable(
-      name = "produto_tem_pedido",
-      joinColumns = @JoinColumn(name = "produto_id", nullable = false),
-      inverseJoinColumns = @JoinColumn(name = "pedido_id", nullable = false)
-  )
-  private List<Pedido> pedidos = new ArrayList<>();
+//  @ManyToMany(mappedBy = "produtos")
+//  private Set<Pedido> pedidos = new HashSet<>();
+
+  @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<PedidoTemProdutos> pedidoTemProdutos = new ArrayList<>();
+  
+//  public void addPedido(Pedido pedido) {
+//    PedidoTemProdutos pedidoTemProdutos = new PedidoTemProdutos();
+//    pedidoTemProdutos.setPedido(pedido);
+//    pedidoTemProdutos.setProduto(this);
+//
+//    this.pedidoTemProdutos.add(pedidoTemProdutos);
+//    pedido.getPedidoTemProdutos().add(pedidoTemProdutos);
+//  }
 }

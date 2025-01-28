@@ -6,6 +6,7 @@ import com.academia.loja_accenture.factory.MakeVendedor;
 import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
 import com.academia.loja_accenture.modulos.pedido.domain.Produto;
 import com.academia.loja_accenture.modulos.pedido.dto.CadastrarPedidoDTO;
+import com.academia.loja_accenture.modulos.pedido.dto.ProdutoComQuantidadeDTO;
 import com.academia.loja_accenture.modulos.pedido.repository.PedidoRepository;
 import com.academia.loja_accenture.modulos.pedido.repository.ProdutoRepository;
 import com.academia.loja_accenture.modulos.usuario.domain.Vendedor;
@@ -85,10 +86,14 @@ class PedidoControllerIntegrationTest {
     produto2.setVendedor(vendedor);
     produto2 = produtoRepository.save(produto2);
     
+    List<ProdutoComQuantidadeDTO> produtosComQuant = List.of(
+        new ProdutoComQuantidadeDTO(produto1.getId(), 1),
+        new ProdutoComQuantidadeDTO(produto2.getId(), 1)
+    );
     CadastrarPedidoDTO data = new CadastrarPedidoDTO(
         cliente.getId(),
         vendedor.getId(),
-        List.of(produto1.getId(), produto2.getId()),
+        produtosComQuant,
         "Pedido Teste"
     );
     
@@ -102,7 +107,7 @@ class PedidoControllerIntegrationTest {
     assertEquals(1, pedidos.size());
     Pedido pedido = pedidos.getFirst();
     assertEquals("Pedido Teste", pedido.getDescricao());
-    assertEquals(2, pedido.getProdutos().size());
+    assertEquals(2, pedido.getPedidoTemProdutos().size());
     assertEquals(BigDecimal.valueOf(80.00), pedido.getValor());
   }
   
@@ -132,7 +137,8 @@ class PedidoControllerIntegrationTest {
     pedido.setDescricao("Pedido Teste");
     pedido.setCliente(cliente);
     pedido.setVendedor(vendedor);
-    pedido.setProdutos(List.of(produto1, produto2));
+    pedido.addProduto(produto1, 1);
+    pedido.addProduto(produto2, 1);
     pedido.setValor(BigDecimal.valueOf(80.00));
     pedido.setQuantidade(2);
     pedido = pedidoRepository.save(pedido);

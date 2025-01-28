@@ -1,56 +1,68 @@
 package com.academia.loja_accenture.config;
 
-import com.academia.loja_accenture.core.message_broker.Exchanges;
-import com.academia.loja_accenture.core.message_broker.Queues;
-import com.academia.loja_accenture.core.message_broker.RoutingKeys;
-import com.academia.loja_accenture.modulos.pagamento.listener.PagamentoListener;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageListener;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.annotation.EnableRabbit;
-import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
-import org.springframework.amqp.rabbit.config.SimpleRabbitListenerEndpoint;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.academia.loja_accenture.core.message_broker.Exchanges;
+import com.academia.loja_accenture.core.message_broker.Queues;
+import com.academia.loja_accenture.core.message_broker.RoutingKeys;
+
 @Configuration
-@EnableRabbit
-public class RabbitMQConfigProducer {
+public class RabbitMQConfig {
   @Bean
   Queue queuePedidosRegistrados() {
-   return new Queue(Queues.PEDIDOS_REGISTRADOS.getName(), true);
+    return new Queue(Queues.PEDIDOS_REGISTRADOS.getName(), true);
   }
-  
+  @Bean
+  Queue queuePedidosPagos() {
+    return new Queue(Queues.PEDIDOS_PAGOS.getName(), true);
+  }
+  @Bean
+  Queue queuePedidosCancelados() {
+    return new Queue(Queues.PEDIDOS_CANCELADOS.getName(), true);
+  }
+
   @Bean
   DirectExchange pedidosExchange() {
     return new DirectExchange(Exchanges.PEDIDOS.getName(), true, false);
   }
   
   @Bean
-  Binding bindingPedidos(Queue queuePedidosRegistrados, DirectExchange pedidosExchange) {
-    return BindingBuilder.bind(queuePedidosRegistrados).to(pedidosExchange).with(RoutingKeys.PEDIDO_REGISTRADO.getName());
+  Binding bindingPedidosRegistrados(Queue queuePedidosRegistrados, DirectExchange pedidosExchange) {
+    return BindingBuilder.bind(queuePedidosRegistrados).to(pedidosExchange)
+        .with(RoutingKeys.PEDIDO_REGISTRADO.getName());
   }
   
   @Bean
-  SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter pagamentoListenerAdapter) {
-    SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-    
-    container.setConnectionFactory(connectionFactory);
-    container.setMessageListener(pagamentoListenerAdapter);
-    
-    container.setQueueNames(Queues.PEDIDOS_REGISTRADOS.getName());
-    
-    return container;
+  Binding bindingPedidosPagos(Queue queuePedidosPagos, DirectExchange pedidosExchange) {
+    return BindingBuilder.bind(queuePedidosPagos).to(pedidosExchange)
+        .with(RoutingKeys.PEDIDO_PAGO.getName());
   }
   
   @Bean
-  MessageListenerAdapter pagamentoListenerAdapter(PagamentoListener pagamentoListener) {
-    return new MessageListenerAdapter(pagamentoListener, "processarPedido");
+  Binding bindingPedidosCancelados(Queue queuePedidosCancelados, DirectExchange pedidosExchange) {
+    return BindingBuilder.bind(queuePedidosCancelados).to(pedidosExchange)
+        .with(RoutingKeys.PEDIDO_CANCELADO.getName());
   }
+
+//  @Bean
+//  SimpleMessageListenerContainer container(ConnectionFactory connectionFactory) {
+//    SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+//
+//    container.setConnectionFactory(connectionFactory);
+//    container.setQueueNames(
+//        Queues.PEDIDOS_REGISTRADOS.getName(),
+//        Queues.PEDIDOS_PAGOS.getName(),
+//        Queues.PEDIDOS_CANCELADOS.getName());
+//
+//    return container;
+//  }
 }

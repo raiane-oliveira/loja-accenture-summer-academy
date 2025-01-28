@@ -4,8 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum Queues {
-//  STATUS_PEDIDOS("equipeum:status-pedidos"),
-  PEDIDOS_REGISTRADOS("equipeum:pedidos-registrados");
+  PEDIDOS_PAGOS("equipeum.pedidos.pagos"),
+  PEDIDOS_CANCELADOS("equipeum.pedidos.cancelados"),
+  PEDIDOS_REGISTRADOS("equipeum.pedidos.registrados");
   
   private String name;
   

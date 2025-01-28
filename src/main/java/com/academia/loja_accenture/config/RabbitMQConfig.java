@@ -1,13 +1,6 @@
 package com.academia.loja_accenture.config;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageListener;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,18 +14,30 @@ public class RabbitMQConfig {
   Queue queuePedidosRegistrados() {
     return new Queue(Queues.PEDIDOS_REGISTRADOS.getName(), true);
   }
+  
   @Bean
   Queue queuePedidosPagos() {
     return new Queue(Queues.PEDIDOS_PAGOS.getName(), true);
   }
+  
+  @Bean
+  Queue queuePedidosPagosEstoque() {
+    return new Queue(Queues.ESTOQUE_PEDIDOS_PAGOS.getName(), true);
+  }
+  
   @Bean
   Queue queuePedidosCancelados() {
     return new Queue(Queues.PEDIDOS_CANCELADOS.getName(), true);
   }
-
+  
   @Bean
   DirectExchange pedidosExchange() {
     return new DirectExchange(Exchanges.PEDIDOS.getName(), true, false);
+  }
+  
+  @Bean
+  TopicExchange pedidosPagosExchange() {
+    return new TopicExchange(Exchanges.PEDIDOS_PAGOS.getName(), true, false);
   }
   
   @Bean
@@ -42,8 +47,13 @@ public class RabbitMQConfig {
   }
   
   @Bean
-  Binding bindingPedidosPagos(Queue queuePedidosPagos, DirectExchange pedidosExchange) {
-    return BindingBuilder.bind(queuePedidosPagos).to(pedidosExchange)
+  Binding bindingPedidosPagos(Queue queuePedidosPagos, TopicExchange pedidosPagosExchange) {
+    return BindingBuilder.bind(queuePedidosPagos).to(pedidosPagosExchange).with(RoutingKeys.PEDIDO_PAGO.getName());
+  }
+  
+  @Bean
+  Binding bindingPedidosPagosEstoque(Queue queuePedidosPagosEstoque, TopicExchange pedidosExchange) {
+    return BindingBuilder.bind(queuePedidosPagosEstoque).to(pedidosExchange)
         .with(RoutingKeys.PEDIDO_PAGO.getName());
   }
   
@@ -52,17 +62,4 @@ public class RabbitMQConfig {
     return BindingBuilder.bind(queuePedidosCancelados).to(pedidosExchange)
         .with(RoutingKeys.PEDIDO_CANCELADO.getName());
   }
-
-//  @Bean
-//  SimpleMessageListenerContainer container(ConnectionFactory connectionFactory) {
-//    SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-//
-//    container.setConnectionFactory(connectionFactory);
-//    container.setQueueNames(
-//        Queues.PEDIDOS_REGISTRADOS.getName(),
-//        Queues.PEDIDOS_PAGOS.getName(),
-//        Queues.PEDIDOS_CANCELADOS.getName());
-//
-//    return container;
-//  }
 }

@@ -11,6 +11,7 @@ import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
 import com.academia.loja_accenture.modulos.pedido.repository.PedidoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,12 +33,13 @@ public class PagamentoService {
     return convertToDTO(pagamentoRepository.save(pagamento));
   }
   
+  @Transactional
   public void update(Long pedidoId, Long pagamentoId, AtualizarPagamentoDTO data) {
     Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(PedidoNotFoundException::new);
     
     Pagamento pagamento = pagamentoRepository.findById(pagamentoId).orElseThrow(PagamentoNotFoundException::new);
     
-    boolean successful = pedido.getPagamento().equals(pagamento);
+    boolean successful = pedido.getPagamento().getId().equals(pagamento.getId());
     if (!successful) {
       throw new PagamentoNotFoundException("Pagamento do pedido " + pedidoId + " não encontrado");
     }

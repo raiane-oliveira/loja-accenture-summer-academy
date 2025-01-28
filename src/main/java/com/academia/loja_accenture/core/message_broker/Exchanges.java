@@ -4,7 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum Exchanges {
-  PEDIDOS("equipeum.pedido");
+  PEDIDOS("equipeum.pedido"),
+  PEDIDOS_PAGOS("equipeum.pedido.pago");
   
   private String name;
   

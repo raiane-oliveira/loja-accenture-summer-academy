@@ -16,11 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class PedidoPagoConsumer {
+public class EstoquePedidoPagoConsumer {
    private final EstoqueService estoqueService;
    private final ObjectMapper objectMapper;
   
-  @RabbitListener(queues = { "equipeum.pedidos.pagos" })
+  @RabbitListener(queues = { "equipeum.estoque.pedidos.pagos" })
    public void receive(String message) {
      TypeReference<PedidoQueuePayload> mapType = new TypeReference<>() {};
      PedidoQueuePayload pedido;

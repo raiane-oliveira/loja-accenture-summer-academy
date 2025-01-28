@@ -1,6 +1,7 @@
 package com.academia.loja_accenture.modulos.usuario.service;
 
 import com.academia.loja_accenture.core.exceptions.ClienteNotFoundException;
+import com.academia.loja_accenture.core.exceptions.InvalidCredentialsException;
 import com.academia.loja_accenture.modulos.usuario.domain.Cliente;
 import com.academia.loja_accenture.modulos.usuario.dto.AtualizarClienteDTO;
 import com.academia.loja_accenture.modulos.usuario.dto.ClienteDTO;
@@ -20,6 +21,10 @@ public class ClienteService {
     private final PasswordEncoder passwordEncoder;
 
     public ClienteDTO save(RegistrarClienteDTO data) {
+        if (clienteRepository.findByEmail(data.email()).isPresent()) {
+            throw new InvalidCredentialsException();
+        }
+        
         Cliente cliente = new Cliente();
         cliente.setNome(data.nome());
         cliente.setEmail(data.email());

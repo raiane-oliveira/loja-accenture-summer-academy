@@ -1,24 +1,18 @@
 package com.academia.loja_accenture.config;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Classe de configuração do Swagger para a API da Loja Accenture.
- * Define como a documentação da API será gerada e configurada.
- */
 @Configuration
 public class SwaggerConfig {
 
-  /**
-   * Define o grupo da API pública e as rotas que serão documentadas.
-   *
-   * @return GroupedOpenApi que define o grupo de rotas para a documentação
-   */
   @Bean
   public GroupedOpenApi publicApi() {
     return GroupedOpenApi.builder()
@@ -27,22 +21,19 @@ public class SwaggerConfig {
             .build();
   }
 
-  /**
-   * Configura as informações básicas sobre a API, como título, descrição e versão.
-   *
-   * @return OpenAPI com as informações configuradas
-   */
   @Bean
   public OpenAPI pessoaAccentureAPI() {
     return new OpenAPI()
-            .info(informacoesApi());  // Definindo as informações da API
+        .components(new Components()
+            .addSecuritySchemes(
+                "bearer-key",
+                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
+            )
+        )
+        .info(informacoesApi()) // Definindo as informações da API
+        .addSecurityItem(new SecurityRequirement().addList("bearer-key"));
   }
 
-  /**
-   * Define as informações principais sobre a API, como título, descrição, versão e licença.
-   *
-   * @return Info com as informações da API
-   */
   private Info informacoesApi() {
     Info apiInfo = new Info();
 

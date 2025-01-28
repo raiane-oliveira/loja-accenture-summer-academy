@@ -93,6 +93,12 @@
 			<artifactId>jakarta.validation-api</artifactId>
 			<version>3.1.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>4.4.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

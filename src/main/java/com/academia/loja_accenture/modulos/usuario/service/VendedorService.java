@@ -1,5 +1,6 @@
 package com.academia.loja_accenture.modulos.usuario.service;
 
+import com.academia.loja_accenture.core.exceptions.InvalidCredentialsException;
 import com.academia.loja_accenture.core.exceptions.VendedorNotFoundException;
 import com.academia.loja_accenture.modulos.usuario.domain.Vendedor;
 import com.academia.loja_accenture.modulos.usuario.dto.AtualizarVendedorDTO;
@@ -20,6 +21,10 @@ public class VendedorService {
     private final PasswordEncoder passwordEncoder;
 
     public VendedorDTO save(RegistrarVendedorDTO data) {
+        if (vendedorRepository.findByEmail(data.email()).isPresent()) {
+            throw new InvalidCredentialsException();
+        }
+        
         Vendedor vendedor = new Vendedor();
         vendedor.setNome(data.nome());
         vendedor.setSetor(data.setor());

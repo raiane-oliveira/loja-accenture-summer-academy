@@ -30,7 +30,7 @@ public class ClienteController {
             }
     )
     @PostMapping
-    public ResponseEntity<ClienteDTO> cadastrarCliente(@Valid @RequestBody RegistrarClienteDTO data) {
+    public ResponseEntity<ClienteDTO> cadastrarCliente(@RequestBody @Valid RegistrarClienteDTO data) {
         ClienteDTO novoCliente = clienteService.save(data);
         return ResponseEntity.ok(novoCliente);
     }

@@ -82,7 +82,6 @@ public class ProdutoController {
     return ResponseEntity.ok(produto);
   }
   
-  // TODO: privar acesso a endpoint (apenas vendedores)
   @Operation(
       summary = "Cadastra um novo produto",
       description = "Realiza o cadastro de um novo produto no sistema",
@@ -95,12 +94,11 @@ public class ProdutoController {
       }
   )
   @PostMapping(value = "/produtos", consumes = "application/json")
-  public ResponseEntity<HttpApiResponse> cadastrarProduto(@Valid @RequestBody CadastrarProdutoDTO data) {
+  public ResponseEntity<HttpApiResponse> cadastrarProduto(@RequestBody @Valid CadastrarProdutoDTO data) {
     produtoService.save(data);
     return ResponseEntity.status(201).body(new HttpApiResponse("Produto cadastrado com sucesso"));
   }
   
-  // TODO: privar acesso a endpoint (apenas vendedores)
   @Operation(
       summary = "Deleta o produto de um vendedor",
       description = "Exclui o produto de um vendedor existente",
@@ -121,7 +119,6 @@ public class ProdutoController {
     return ResponseEntity.ok(new HttpApiResponse("Produto removido com sucesso"));
   }
   
-  // TODO: privar acesso a endpoint (apenas vendedores)
   @Operation(
       summary = "Atualiza o produto de um vendedor",
       description = "Atualiza o produto de um vendedor existente",

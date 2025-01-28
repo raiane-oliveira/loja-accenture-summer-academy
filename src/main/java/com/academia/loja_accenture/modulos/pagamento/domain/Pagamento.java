@@ -2,9 +2,10 @@ package com.academia.loja_accenture.modulos.pagamento.domain;
 
 import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,14 +20,18 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "pagamento")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Pagamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatusPagamento status;
     
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MetodoPagamento metodo;
     

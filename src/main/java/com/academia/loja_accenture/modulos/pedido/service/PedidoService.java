@@ -4,8 +4,6 @@ import com.academia.loja_accenture.core.exceptions.*;
 import com.academia.loja_accenture.core.message_broker.Exchanges;
 import com.academia.loja_accenture.core.message_broker.RoutingKeys;
 import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
-import com.academia.loja_accenture.modulos.pedido.domain.PedidoTemProdutos;
-import com.academia.loja_accenture.modulos.pedido.domain.PedidoTemProdutosId;
 import com.academia.loja_accenture.modulos.pedido.domain.Produto;
 import com.academia.loja_accenture.modulos.pedido.dto.*;
 import com.academia.loja_accenture.modulos.pedido.repository.PedidoRepository;
@@ -23,9 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

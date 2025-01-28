@@ -10,10 +10,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
-  @ExceptionHandler(InvalidJsonException.class)
-  private ResponseEntity<HttpApiErrorMessage> invalidJsonExceptionHandler(InvalidJsonException e) {
-    return getResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-  }
+//  @ExceptionHandler(InvalidJsonException.class)
+//  private ResponseEntity<HttpApiErrorMessage> invalidJsonExceptionHandler(InvalidJsonException e) {
+//    return getResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+//  }
   
   @ExceptionHandler(ResourceNotFound.class)
   private ResponseEntity<HttpApiErrorMessage> resourceNotFoundHandler(ResourceNotFound e) {
@@ -50,10 +50,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     return getResponse(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 
-  @ExceptionHandler(RuntimeException.class)
-  private ResponseEntity<HttpApiErrorMessage> runtimeExceptionHandler(RuntimeException e) {
-    return getResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-  }
+//  @ExceptionHandler(RuntimeException.class)
+//  private ResponseEntity<HttpApiErrorMessage> runtimeExceptionHandler(RuntimeException e) {
+//    return getResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+//  }
 
   private ResponseEntity<HttpApiErrorMessage> getResponse(HttpStatus status, String message) {
     HttpApiErrorMessage response = new HttpApiErrorMessage(HttpStatus.BAD_REQUEST.value(), message);

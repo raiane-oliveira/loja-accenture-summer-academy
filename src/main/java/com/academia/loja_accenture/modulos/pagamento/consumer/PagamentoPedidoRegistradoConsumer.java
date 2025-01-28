@@ -12,17 +12,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class PagamentoPedidoRegistradoConsumer {
    private final PagamentoService pagamentoService;
    private final AmqpTemplate amqpTemplate;
    private final ObjectMapper objectMapper;
-  
+   
   @RabbitListener(queues = { "equipeum.pedidos.registrados" })
    public void receive(String message) {
      TypeReference<PedidoQueuePayload> mapType = new TypeReference<>() {};
@@ -51,9 +53,10 @@ public class PagamentoPedidoRegistradoConsumer {
      
      if (statusPagamento.equals(StatusPagamento.CANCELADO)) {
        amqpTemplate.convertAndSend(Exchanges.PEDIDOS.getName(), RoutingKeys.PEDIDO_CANCELADO.getName(), message);
+       log.info("Pedido #{} enviado para a fila de pedidos cancelados", pedido.id());
      } else {
        amqpTemplate.convertAndSend(Exchanges.PEDIDOS.getName(), RoutingKeys.PEDIDO_PAGO.getName(), message);
+       log.info("Pedido #{} enviado para a fila de pedidos pagos", pedido.id());
      }
-     
    }
 }

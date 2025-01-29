@@ -25,7 +25,6 @@ public class ObterStatusController {
     })
     @GetMapping("/{pedidoId}")
     public ResponseEntity<RegistrarStatusResponseDTO> obterStatusAtual(@PathVariable Long pedidoId) {
-        RegistrarStatusResponseDTO response = statusPedidoService.obterStatusAtual(pedidoId);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(statusPedidoService.obterStatusAtual(pedidoId));
     }
 }

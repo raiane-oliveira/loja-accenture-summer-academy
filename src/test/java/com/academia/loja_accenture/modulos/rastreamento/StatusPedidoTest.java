@@ -1,43 +1,43 @@
 package com.academia.loja_accenture.modulos.rastreamento;
 
 import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
+import com.academia.loja_accenture.modulos.rastreamento.domain.StatusEnum;
 import com.academia.loja_accenture.modulos.rastreamento.domain.StatusPedido;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class StatusPedidoTest {
 
-    @Test
-    void deveCriarStatusPedidoComSucesso() {
-        Long id = 1L;
-        String descricao = "Pedido em andamento";
-        LocalDateTime createdAt = LocalDateTime.now();
-        List<Pedido> pedidos = new ArrayList<>();
+    private StatusPedido statusPedido;
+    private Pedido pedido;
 
-        StatusPedido statusPedido = new StatusPedido(id, descricao, createdAt, pedidos);
+    @BeforeEach
+    void setUp() {
+        pedido = new Pedido();
+        pedido.setId(1L);
 
-        assertEquals(id, statusPedido.getId());
-        assertEquals(descricao, statusPedido.getDescricao());
-        assertEquals(createdAt, statusPedido.getCreatedAt());
-        assertEquals(pedidos, statusPedido.getPedidos());
+        statusPedido = new StatusPedido();
+        statusPedido.setId(1L);
+        statusPedido.setStatus(StatusEnum.PROCESSANDO);
+        statusPedido.setCreatedAt(LocalDateTime.now());
+        statusPedido.setPedido(pedido);
     }
 
     @Test
-    void deveAlterarPropriedadesDoStatusPedido() {
-        StatusPedido statusPedido = new StatusPedido();
-        statusPedido.setId(1L);
-        statusPedido.setDescricao("Pedido entregue");
-        statusPedido.setCreatedAt(LocalDateTime.now());
-        statusPedido.setPedidos(new ArrayList<>());
-
-        assertNotNull(statusPedido.getId());
-        assertEquals("Pedido entregue", statusPedido.getDescricao());
+    void testStatusPedidoAttributes() {
+        assertEquals(1L, statusPedido.getId());
+        assertEquals(StatusEnum.PROCESSANDO, statusPedido.getStatus());
         assertNotNull(statusPedido.getCreatedAt());
-        assertNotNull(statusPedido.getPedidos());
+        assertEquals(1L, statusPedido.getPedido().getId());
+    }
+
+    @Test
+    void testSetStatusEnum() {
+        statusPedido.setStatus(StatusEnum.ENTREGUE);
+        assertEquals(StatusEnum.ENTREGUE, statusPedido.getStatus());
     }
 }

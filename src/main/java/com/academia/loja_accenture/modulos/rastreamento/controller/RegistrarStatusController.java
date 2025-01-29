@@ -22,13 +22,13 @@ public class RegistrarStatusController {
     @Operation(summary = "Registrar status do pedido", description = "Vincula um novo status ao pedido.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Status registrado com sucesso."),
-            @ApiResponse(responseCode = "404", description = "Pedido não encontrado!")
+            @ApiResponse(responseCode = "404", description = "Pedido não encontrado!"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos na requisição!")
     })
     @PostMapping("/{pedidoId}/registrar")
     public ResponseEntity<RegistrarStatusResponseDTO> registrarStatus(
             @PathVariable Long pedidoId,
             @RequestBody RegistrarStatusRequestDTO request) {
-        RegistrarStatusResponseDTO response = statusPedidoService.registrarStatus(pedidoId, request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(statusPedidoService.registrarStatus(pedidoId, request));
     }
 }

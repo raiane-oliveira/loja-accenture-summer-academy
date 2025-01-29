@@ -27,7 +27,6 @@ public class ObterHistoricoController {
     })
     @GetMapping("/{pedidoId}/historico")
     public ResponseEntity<List<RegistrarStatusResponseDTO>> obterHistorico(@PathVariable Long pedidoId) {
-        List<RegistrarStatusResponseDTO> response = statusPedidoService.obterHistorico(pedidoId);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(statusPedidoService.obterHistorico(pedidoId));
     }
 }

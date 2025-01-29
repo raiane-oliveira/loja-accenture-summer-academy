@@ -54,7 +54,6 @@ public class SecurityConfig {
                    .requestMatchers(HttpMethod.PATCH, "/estoques/{id}/quantidade").hasRole(UserRole.VENDEDOR.name())
                    .requestMatchers(HttpMethod.POST, "/estoques").hasRole(UserRole.VENDEDOR.name())
                    
-                   .requestMatchers("/swagger-ui.html").permitAll()
                    .requestMatchers("/swagger-ui/**").permitAll()
                    .requestMatchers("/api-docs/**").permitAll()
                    .anyRequest().authenticated()

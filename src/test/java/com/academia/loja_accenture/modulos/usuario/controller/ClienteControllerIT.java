@@ -111,7 +111,7 @@ public class ClienteControllerIT {
     
     @Test
     void deveAtualizarCliente() throws Exception {
-        AtualizarClienteDTO requestDTO = new AtualizarClienteDTO("Cliente Atualizado", "atualizado@cliente.com", "123456");
+        AtualizarClienteDTO requestDTO = new AtualizarClienteDTO("Cliente Atualizado");
         
         ResultActions response = mockMvc.perform(put("/api/clientes/{id}", cliente.getId())
             .header("Authorization", "Bearer " + tokenCliente)
@@ -122,6 +122,5 @@ public class ClienteControllerIT {
         
         Cliente clienteAtualizado = clienteRepository.findById(cliente.getId()).orElseThrow();
         assert clienteAtualizado.getNome().equals(requestDTO.nome());
-        assert clienteAtualizado.getEmail().equals(requestDTO.email());
     }
 }

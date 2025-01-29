@@ -44,12 +44,6 @@ public class VendedorService {
         if (data.setor() != null) {
             vendedor.setSetor(data.setor());
         }
-        if (data.email() != null) {
-            vendedor.setEmail(data.email());
-        }
-        if (data.senha() != null) {
-            vendedor.setSenha(passwordEncoder.encode(data.senha()));
-        }
 
         vendedorRepository.save(vendedor);
     }

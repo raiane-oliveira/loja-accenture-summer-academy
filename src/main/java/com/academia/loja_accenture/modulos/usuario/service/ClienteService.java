@@ -40,12 +40,6 @@ public class ClienteService {
         if (data.nome() != null) {
             cliente.setNome(data.nome());
         }
-        if (data.email() != null) {
-            cliente.setEmail(data.email());
-        }
-        if (data.senha() != null) {
-            cliente.setSenha(passwordEncoder.encode(data.senha()));
-        }
 
         clienteRepository.save(cliente);
     }

@@ -102,7 +102,7 @@ public class VendedorControllerIT {
     
     @Test
     void deveAtualizarVendedor() throws Exception {
-        AtualizarVendedorDTO requestDTO = new AtualizarVendedorDTO("Vendedor Atualizado", "Vendas", "atualizado@vendedor.com", "123456");
+        AtualizarVendedorDTO requestDTO = new AtualizarVendedorDTO("Vendedor Atualizado", "Vendas");
         
         ResultActions response = mockMvc.perform(put("/api/vendedores/{id}", vendedor.getId())
             .header("Authorization", "Bearer " + token)
@@ -113,6 +113,5 @@ public class VendedorControllerIT {
         
         Vendedor vendedorAtualizado = vendedorRepository.findById(vendedor.getId()).orElseThrow();
         assert vendedorAtualizado.getNome().equals(requestDTO.nome());
-        assert vendedorAtualizado.getEmail().equals(requestDTO.email());
     }
 }

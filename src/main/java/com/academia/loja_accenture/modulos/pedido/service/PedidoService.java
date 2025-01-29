@@ -7,7 +7,6 @@ import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
 import com.academia.loja_accenture.modulos.pedido.domain.Produto;
 import com.academia.loja_accenture.modulos.pedido.dto.*;
 import com.academia.loja_accenture.modulos.pedido.repository.PedidoRepository;
-import com.academia.loja_accenture.modulos.pedido.repository.PedidoTemProdutosRepository;
 import com.academia.loja_accenture.modulos.pedido.repository.ProdutoRepository;
 import com.academia.loja_accenture.modulos.usuario.domain.Cliente;
 import com.academia.loja_accenture.modulos.usuario.domain.Vendedor;
@@ -30,7 +29,6 @@ public class PedidoService {
     private final ProdutoRepository produtoRepository;
     private final ClienteRepository clienteRepository;
     private final VendedorRepository vendedorRepository;
-    private final PedidoTemProdutosRepository pedidoTemProdutosRepository;
     private final AmqpTemplate amqpTemplate;
     private final ObjectMapper objectMapper;
 
@@ -51,12 +49,16 @@ public class PedidoService {
         BigDecimal total = produtos.stream()
                 .map(Produto::getValor)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+        
+        int totalProdutosQtd = data.produtos().stream()
+                .map(ProdutoComQuantidadeDTO::quantidade)
+                .reduce(0, Integer::sum);
 
         Pedido pedido = new Pedido();
         pedido.setCliente(cliente);
         pedido.setValor(total);
         pedido.setVendedor(vendedor);
-        pedido.setQuantidade(produtos.size());
+        pedido.setQuantidade(totalProdutosQtd);
         pedido.setDescricao(data.descricao());
         
         List<ProdutoComQuantidadeDTO> produtoComQuantidadeDTOs = new ArrayList<>();

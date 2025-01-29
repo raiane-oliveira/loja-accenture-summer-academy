@@ -26,8 +26,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     return getResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
   }
   
-  @ExceptionHandler(ResourceNotFound.class)
-  private ResponseEntity<HttpApiErrorMessage> resourceNotFoundHandler(ResourceNotFound e) {
+  @ExceptionHandler(ResourceNotFoundException.class)
+  private ResponseEntity<HttpApiErrorMessage> resourceNotFoundHandler(ResourceNotFoundException e) {
     return getResponse(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 

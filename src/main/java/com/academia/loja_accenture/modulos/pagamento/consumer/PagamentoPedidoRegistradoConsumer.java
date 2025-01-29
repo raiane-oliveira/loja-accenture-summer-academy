@@ -50,7 +50,7 @@ public class PagamentoPedidoRegistradoConsumer {
      
       // Simulação, processamento do pagamento
       // Lógica para testar os dois fluxos: pagamentos finalizados e cancelados
-      boolean isSuccessful =  (int) (Math.random() * 100) < 80;
+      boolean isSuccessful = (int) (Math.random() * 100) < 80;
     
       if (!isSuccessful) {
          AtualizarPagamentoDTO pagamentoCancelado = new AtualizarPagamentoDTO(StatusPagamento.CANCELADO, null, null);

@@ -1,5 +1,6 @@
 package com.academia.loja_accenture.modulos.pagamento;
 
+import com.academia.loja_accenture.config.RabbitMQMockConfig;
 import com.academia.loja_accenture.core.exceptions.PagamentoNotFoundException;
 import com.academia.loja_accenture.core.exceptions.PedidoNotFoundException;
 import com.academia.loja_accenture.modulos.pagamento.domain.MetodoPagamento;
@@ -14,9 +15,12 @@ import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
 import com.academia.loja_accenture.modulos.pedido.repository.PedidoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.annotation.Import;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,6 +30,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
+@Import(RabbitMQMockConfig.class)
 class PagamentoServiceTest {
   
   @InjectMocks
@@ -36,11 +42,6 @@ class PagamentoServiceTest {
   
   @Mock
   private PedidoRepository pedidoRepository;
-  
-  @BeforeEach
-  void setup() {
-    MockitoAnnotations.openMocks(this);
-  }
   
   @Test
   void shouldSavePagamentoSuccessfully() {
@@ -186,7 +187,9 @@ class PagamentoServiceTest {
     pagamento.setId(pagamentoId);
     pagamento.setPedido(outroPedido);
     
-    pedido.setPagamento(new Pagamento()); // Pedido tem outro pagamento
+    Pagamento pagamento2 = new Pagamento();
+    pagamento2.setId(1L);
+    pedido.setPagamento(pagamento2); // Pedido tem outro pagamento
     
     AtualizarPagamentoDTO data = new AtualizarPagamentoDTO(
         StatusPagamento.FINALIZADO,

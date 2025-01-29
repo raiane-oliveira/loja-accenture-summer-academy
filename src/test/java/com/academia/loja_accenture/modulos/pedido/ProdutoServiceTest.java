@@ -15,9 +15,11 @@ import com.academia.loja_accenture.modulos.usuario.domain.Vendedor;
 import com.academia.loja_accenture.modulos.usuario.repository.VendedorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +32,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class ProdutoServiceTest {
 
     @InjectMocks
@@ -40,11 +43,6 @@ class ProdutoServiceTest {
 
     @Mock
     private VendedorRepository vendedorRepository;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void shouldListAllProducts() {
@@ -157,7 +155,7 @@ class ProdutoServiceTest {
     void shouldThrowExceptionWhenUpdateProductWithInvalidVendedor() {
         Vendedor vendedor = MakeVendedor.create();
         vendedor.setId(1L);
-        when(vendedorRepository.findById(1L)).thenReturn(Optional.of(vendedor));
+        lenient().when(vendedorRepository.findById(1L)).thenReturn(Optional.of(vendedor));
 
         Produto produto = MakeProduto.create();
         produto.setId(1L);

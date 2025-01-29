@@ -7,9 +7,15 @@ public class MakeCliente {
     Cliente cliente = new Cliente();
     cliente.setId(null);
     cliente.setNome("John Doe");
-    cliente.setEmail("johndoe@example.com");
+    cliente.setEmail("cliente@example.com");
     cliente.setSenha("123456");
     
+    return cliente;
+  }
+  
+  public static Cliente create(Long id) {
+    Cliente cliente = new Cliente();
+    cliente.setId(id);
     return cliente;
   }
   

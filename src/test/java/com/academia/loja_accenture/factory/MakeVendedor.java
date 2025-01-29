@@ -7,10 +7,16 @@ public class MakeVendedor {
     Vendedor vendedor = new Vendedor();
     vendedor.setId(null);
     vendedor.setNome("John Doe");
-    vendedor.setEmail("johndoe@example.com");
+    vendedor.setEmail("vendedor@example.com");
     vendedor.setSenha("123456");
     vendedor.setSetor("teste");
     
+    return vendedor;
+  }
+  
+  public static Vendedor create(Long id) {
+    Vendedor vendedor = new Vendedor();
+    vendedor.setId(id);
     return vendedor;
   }
   

@@ -1,11 +1,10 @@
 package com.academia.loja_accenture.modulos.rastreamento.service;
 
 import com.academia.loja_accenture.core.exceptions.PedidoNotFoundException;
-import com.academia.loja_accenture.core.exceptions.ResourceNotFound;
+import com.academia.loja_accenture.core.exceptions.ResourceNotFoundException;
 import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
 import com.academia.loja_accenture.modulos.pedido.repository.PedidoRepository;
 import com.academia.loja_accenture.modulos.rastreamento.domain.StatusPedido;
-import com.academia.loja_accenture.modulos.rastreamento.domain.StatusEnum;
 import com.academia.loja_accenture.modulos.rastreamento.dto.RegistrarStatusRequestDTO;
 import com.academia.loja_accenture.modulos.rastreamento.dto.RegistrarStatusResponseDTO;
 import com.academia.loja_accenture.modulos.rastreamento.repository.StatusPedidoRepository;
@@ -65,7 +64,7 @@ public class StatusPedidoService {
 
         if (historico.isEmpty()) {
             log.warn("Nenhum histórico de status encontrado para o pedido ID: {}", pedidoId);
-            throw new ResourceNotFound("Nenhum status encontrado para o pedido com ID " + pedidoId);
+            throw new ResourceNotFoundException("Nenhum status encontrado para o pedido com ID " + pedidoId);
         }
 
         log.info("Histórico de status encontrado para o pedido ID: {}", pedidoId);
@@ -90,7 +89,7 @@ public class StatusPedidoService {
         StatusPedido statusAtual = statusPedidoRepository.findTopByPedidoIdOrderByCreatedAtDesc(pedidoId)
                 .orElseThrow(() -> {
                     log.error("Nenhum status encontrado para o pedido com ID: {}", pedidoId);
-                    return new ResourceNotFound("Nenhum status encontrado para o pedido com ID " + pedidoId);
+                    return new ResourceNotFoundException("Nenhum status encontrado para o pedido com ID " + pedidoId);
                 });
 
         log.info("Status atual encontrado para o pedido ID {}: Status ID {}, Status: {}",

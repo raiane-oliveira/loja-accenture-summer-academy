@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("integration-test")
 @Transactional
 @Import(RabbitMQMockConfig.class)
-public class PagamentoControllerIntegrationTest {
+public class PagamentoControllerIT {
   
   @Autowired
   private MockMvc mockMvc;

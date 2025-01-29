@@ -6,15 +6,19 @@ import com.academia.loja_accenture.modulos.usuario.dto.RegistrarVendedorDTO;
 import com.academia.loja_accenture.modulos.usuario.dto.VendedorDTO;
 import com.academia.loja_accenture.modulos.usuario.repository.VendedorRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class VendedorServiceTest {
 
     @InjectMocks
@@ -22,10 +26,9 @@ class VendedorServiceTest {
 
     @Mock
     private VendedorRepository vendedorRepository;
-
-    public VendedorServiceTest() {
-        MockitoAnnotations.openMocks(this);
-    }
+    
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @Test
     void deveSalvarVendedorComSucesso() {

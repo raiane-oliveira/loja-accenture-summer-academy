@@ -33,4 +33,9 @@ public class StatusPedido {
   @JoinColumn(name = "pedido_id", nullable = false)
   @JsonIgnore // Evita problemas de serialização (recursão infinita)
   private Pedido pedido;
+  
+  public StatusPedido(StatusEnum status, Pedido pedido) {
+    this.status = status;
+    this.pedido = pedido;
+  }
 }

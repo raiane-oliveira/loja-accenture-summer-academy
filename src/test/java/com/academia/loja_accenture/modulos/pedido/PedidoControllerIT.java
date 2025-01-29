@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("integration-test")
 @Transactional
 @Import(RabbitMQMockConfig.class)
-class PedidoControllerIntegrationTest {
+class PedidoControllerIT {
   
   @Autowired
   private MockMvc mockMvc;

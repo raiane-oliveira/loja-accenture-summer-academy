@@ -10,10 +10,16 @@ public class MakeProduto {
   public static Produto create() {
     Produto produto = new Produto();
     produto.setNome("Produto 1");
-    produto.setDescricao("descricao produto 1");
+    produto.setDescricao("descrição produto 1");
     produto.setValor(BigDecimal.valueOf(100));
     produto.setCreatedAt(LocalDateTime.now());
     
+    return produto;
+  }
+  
+  public static Produto create(Long id) {
+    Produto produto = new Produto();
+    produto.setId(id);
     return produto;
   }
   

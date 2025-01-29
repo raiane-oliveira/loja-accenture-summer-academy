@@ -1,9 +1,7 @@
 package com.academia.loja_accenture.modulos.pedido;
 
-import com.academia.loja_accenture.core.exceptions.ClienteNotFoundException;
-import com.academia.loja_accenture.core.exceptions.PedidoNotFoundException;
-import com.academia.loja_accenture.core.exceptions.ProdutoNotFoundException;
-import com.academia.loja_accenture.core.exceptions.VendedorNotFoundException;
+import com.academia.loja_accenture.config.RabbitMQMockConfig;
+import com.academia.loja_accenture.core.exceptions.*;
 import com.academia.loja_accenture.factory.MakeCliente;
 import com.academia.loja_accenture.factory.MakeVendedor;
 import com.academia.loja_accenture.modulos.pedido.domain.Pedido;
@@ -18,13 +16,15 @@ import com.academia.loja_accenture.modulos.usuario.domain.Cliente;
 import com.academia.loja_accenture.modulos.usuario.domain.Vendedor;
 import com.academia.loja_accenture.modulos.usuario.repository.ClienteRepository;
 import com.academia.loja_accenture.modulos.usuario.repository.VendedorRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.context.annotation.Import;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,6 +34,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
+@Import(RabbitMQMockConfig.class)
 class PedidoServiceTest {
 
     @InjectMocks
@@ -50,73 +52,68 @@ class PedidoServiceTest {
     
     @Mock
     private VendedorRepository vendedorRepository;
-
-    @Mock
-    private AmqpTemplate amqpTemplate;
     
     @Mock
     private ObjectMapper objectMapper;
-
-    @BeforeEach
-    void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
-
+    
+    @Mock
+    private AmqpTemplate amqpTemplate;
+    
     @Test
     void shouldSavePedidoSuccessfully() {
         Long clienteId = 1L;
         Long vendedorId = 2L;
         List<ProdutoComQuantidadeDTO> produtosComQuant = List.of(
-            new ProdutoComQuantidadeDTO(3L, 1),
-            new ProdutoComQuantidadeDTO(4L, 1)
+            new ProdutoComQuantidadeDTO(3L, 2), // Produto 3 com quantidade 2
+            new ProdutoComQuantidadeDTO(4L, 3)  // Produto 4 com quantidade 3
         );
         List<Long> produtosIds = produtosComQuant.stream().map(ProdutoComQuantidadeDTO::id).toList();
         
         CadastrarPedidoDTO data = new CadastrarPedidoDTO(
-                clienteId,
-                vendedorId,
-                produtosComQuant,
-                "Pedido de teste"
+            clienteId,
+            vendedorId,
+            produtosComQuant,
+            "Pedido de teste"
         );
-
+        
         Cliente cliente = new Cliente();
         cliente.setId(clienteId);
-
+        
         Vendedor vendedor = new Vendedor();
         vendedor.setId(vendedorId);
-
+        
         Produto produto1 = new Produto();
         produto1.setId(3L);
         produto1.setValor(BigDecimal.valueOf(50.00));
         produto1.setVendedor(vendedor);
-
+        
         Produto produto2 = new Produto();
         produto2.setId(4L);
         produto2.setValor(BigDecimal.valueOf(30.00));
         produto2.setVendedor(vendedor);
-
+        
         Pedido pedido = new Pedido();
         pedido.setId(10L);
         pedido.setDescricao(data.descricao());
         pedido.setCliente(cliente);
         pedido.setVendedor(vendedor);
-        pedido.addProduto(produto1, 1);
-        pedido.addProduto(produto2, 1);
-        pedido.setValor(BigDecimal.valueOf(80.00));
-        pedido.setQuantidade(2);
-
+        pedido.addProduto(produto1, 2);
+        pedido.addProduto(produto2, 3);
+        pedido.setValor(BigDecimal.valueOf(190.00)); // 50*2 + 30*3
+        pedido.setQuantidade(5);
+        
         when(clienteRepository.findById(clienteId)).thenReturn(Optional.of(cliente));
         when(vendedorRepository.findById(vendedorId)).thenReturn(Optional.of(vendedor));
         when(produtoRepository.findAllById(produtosIds)).thenReturn(List.of(produto1, produto2));
         when(pedidoRepository.save(any(Pedido.class))).thenReturn(pedido);
-
+        
         PedidoDTO result = pedidoService.save(data);
-
+        
         assertNotNull(result);
         assertEquals(10L, result.id());
         assertEquals("Pedido de teste", result.descricao());
-        assertEquals(BigDecimal.valueOf(80.00), result.valor());
-        assertEquals(2, result.quantidade());
+        assertEquals(BigDecimal.valueOf(190.00), result.valor()); // Verificando o valor calculado
+        assertEquals(5, result.quantidade());
         verify(clienteRepository, times(1)).findById(clienteId);
         verify(vendedorRepository, times(1)).findById(vendedorId);
         verify(produtoRepository, times(1)).findAllById(produtosIds);
@@ -216,7 +213,7 @@ class PedidoServiceTest {
         produto1.setDescricao("Descrição Teste");
         produto1.setValor(BigDecimal.valueOf(10.0));
         produto1.setVendedor(vendedor);
-        when(produtoRepository.findById(1L)).thenReturn(Optional.of(produto1));
+        lenient().when(produtoRepository.findById(1L)).thenReturn(Optional.of(produto1));
 
         Produto produto2 = new Produto();
         produto2.setId(2L);
@@ -224,7 +221,7 @@ class PedidoServiceTest {
         produto2.setDescricao("Descrição Teste 2");
         produto2.setValor(BigDecimal.valueOf(11.0));
         produto2.setVendedor(vendedor);
-        when(produtoRepository.findById(2L)).thenReturn(Optional.of(produto2));
+        lenient().when(produtoRepository.findById(2L)).thenReturn(Optional.of(produto2));
 
         Pedido pedido = new Pedido();
         pedido.setId(1L);
@@ -255,4 +252,57 @@ class PedidoServiceTest {
 
         assertEquals("Pedido não encontrado", exception.getMessage());
     }
+    
+    @Test
+    void shouldThrowExceptionWhenJsonProcessingFails() throws JsonProcessingException {
+        Long clienteId = 1L;
+        Long vendedorId = 2L;
+        List<ProdutoComQuantidadeDTO> produtosComQuant = List.of(
+            new ProdutoComQuantidadeDTO(3L, 1),
+            new ProdutoComQuantidadeDTO(4L, 1)
+        );
+        List<Long> produtosIds = produtosComQuant.stream().map(ProdutoComQuantidadeDTO::id).toList();
+        
+        CadastrarPedidoDTO data = new CadastrarPedidoDTO(
+            clienteId,
+            vendedorId,
+            produtosComQuant,
+            "Pedido de teste"
+        );
+        
+        Cliente cliente = new Cliente();
+        cliente.setId(clienteId);
+        
+        Vendedor vendedor = new Vendedor();
+        vendedor.setId(vendedorId);
+        
+        Produto produto1 = new Produto();
+        produto1.setId(3L);
+        produto1.setValor(BigDecimal.valueOf(50.00));
+        produto1.setVendedor(vendedor);
+        
+        Produto produto2 = new Produto();
+        produto2.setId(4L);
+        produto2.setValor(BigDecimal.valueOf(30.00));
+        produto2.setVendedor(vendedor);
+        
+        Pedido pedido = new Pedido();
+        pedido.setId(10L);
+        pedido.setDescricao(data.descricao());
+        pedido.setCliente(cliente);
+        pedido.setVendedor(vendedor);
+        pedido.addProduto(produto1, 1);
+        pedido.addProduto(produto2, 1);
+        pedido.setValor(BigDecimal.valueOf(80.00));
+        pedido.setQuantidade(2);
+        
+        when(clienteRepository.findById(clienteId)).thenReturn(Optional.of(cliente));
+        when(vendedorRepository.findById(vendedorId)).thenReturn(Optional.of(vendedor));
+        when(produtoRepository.findAllById(produtosIds)).thenReturn(List.of(produto1, produto2));
+        when(pedidoRepository.save(any(Pedido.class))).thenReturn(pedido);
+        doThrow(JsonProcessingException.class).when(objectMapper).writeValueAsString(any());
+        
+        assertThrows(InvalidJsonException.class, () -> pedidoService.save(data));
+    }
+    
 }

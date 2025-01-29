@@ -3,6 +3,9 @@ package com.academia.loja_accenture.modulos.usuario.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public record RegistrarVendedorDTO(
         @NotBlank(message = "O nome é obrigatório.")

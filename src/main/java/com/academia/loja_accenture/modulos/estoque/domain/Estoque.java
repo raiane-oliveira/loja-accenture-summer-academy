@@ -3,6 +3,7 @@ package com.academia.loja_accenture.modulos.estoque.domain;
 import com.academia.loja_accenture.modulos.pedido.domain.Produto;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "estoque")
 @Entity
 @Data
+@NoArgsConstructor
 public class Estoque {
 
   @Id
@@ -37,5 +39,12 @@ public class Estoque {
       throw new IllegalArgumentException("Quantidade insuficiente no estoque.");
     }
     this.quantidade += quantidadeAlterada;
+  }
+  
+  public Estoque(Long id, Produto produto, Long quantidade, String name) {
+    this.id = id;
+    this.name = name;
+    this.quantidade = quantidade;
+    this.produto = produto;
   }
 }

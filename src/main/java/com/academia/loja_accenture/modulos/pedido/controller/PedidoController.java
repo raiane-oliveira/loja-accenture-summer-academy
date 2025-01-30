@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/pedidos")
+@RequestMapping("/api/pedidos")
 @Tag(name = "Pedido")
 public class PedidoController {
     private final PedidoService pedidoService;

@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/estoques")
+@RequestMapping("/api/estoques")
 @Tag(name = "Estoque", description = "Operações para gerenciar o estoque de produtos")
 public class EstoqueController {
 

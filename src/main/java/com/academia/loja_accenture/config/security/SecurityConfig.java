@@ -27,14 +27,14 @@ public class SecurityConfig {
                 .csrf((csrf) -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                .authorizeHttpRequests(auth -> auth.
-                   requestMatchers(HttpMethod.GET, "/produtos").permitAll()
-                   .requestMatchers(HttpMethod.GET, "/produtos/{produtoId}").permitAll()
-                   .requestMatchers(HttpMethod.GET, "/produtos/vendedor/{vendedorId}").permitAll()
-                   .requestMatchers(HttpMethod.POST, "/produtos").hasRole(UserRole.VENDEDOR.name())
-                   .requestMatchers(HttpMethod.PUT, "/produtos/{vendedorId}/{produtoId}").hasRole(UserRole.VENDEDOR.name())
-                   .requestMatchers(HttpMethod.DELETE, "/produtos/{vendedorId}/{produtoId}").hasRole(UserRole.VENDEDOR.name())
+                   requestMatchers(HttpMethod.GET, "/api/produtos").permitAll()
+                   .requestMatchers(HttpMethod.GET, "/api/produtos/{produtoId}").permitAll()
+                   .requestMatchers(HttpMethod.GET, "/api/produtos/vendedor/{vendedorId}").permitAll()
+                   .requestMatchers(HttpMethod.POST, "/api/produtos").hasRole(UserRole.VENDEDOR.name())
+                   .requestMatchers(HttpMethod.PUT, "/api/produtos/{vendedorId}/{produtoId}").hasRole(UserRole.VENDEDOR.name())
+                   .requestMatchers(HttpMethod.DELETE, "/api/produtos/{vendedorId}/{produtoId}").hasRole(UserRole.VENDEDOR.name())
                    
-                   .requestMatchers(HttpMethod.POST, "/pedidos").hasRole(UserRole.CLIENTE.name())
+                   .requestMatchers(HttpMethod.POST, "/api/pedidos").hasRole(UserRole.CLIENTE.name())
                    
                    .requestMatchers(HttpMethod.POST, "/api/status-pedidos/{pedidoId}/registrar").hasRole(UserRole.VENDEDOR.name())
                    
@@ -49,10 +49,10 @@ public class SecurityConfig {
                    .requestMatchers(HttpMethod.GET, "/api/clientes").hasRole(UserRole.VENDEDOR.name())
                    .requestMatchers(HttpMethod.PUT, "/api/clientes/{id}").hasRole(UserRole.CLIENTE.name())
                    
-                   .requestMatchers(HttpMethod.GET, "/estoques").hasRole(UserRole.VENDEDOR.name())
-                   .requestMatchers(HttpMethod.GET, "/estoques/{id}").hasRole(UserRole.VENDEDOR.name())
-                   .requestMatchers(HttpMethod.PATCH, "/estoques/{id}/quantidade").hasRole(UserRole.VENDEDOR.name())
-                   .requestMatchers(HttpMethod.POST, "/estoques").hasRole(UserRole.VENDEDOR.name())
+                   .requestMatchers(HttpMethod.GET, "/api/estoques").hasRole(UserRole.VENDEDOR.name())
+                   .requestMatchers(HttpMethod.GET, "/api/estoques/{id}").hasRole(UserRole.VENDEDOR.name())
+                   .requestMatchers(HttpMethod.PATCH, "/api/estoques/{id}/quantidade").hasRole(UserRole.VENDEDOR.name())
+                   .requestMatchers(HttpMethod.POST, "/api/estoques").hasRole(UserRole.VENDEDOR.name())
                    
                    .requestMatchers("/swagger-ui.html").permitAll()
                    .requestMatchers("/swagger-ui/**").permitAll()

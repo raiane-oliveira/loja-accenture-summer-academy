@@ -105,7 +105,7 @@ class PedidoControllerIT {
         "Pedido Teste"
     );
     
-    mockMvc.perform(post("/pedidos")
+    mockMvc.perform(post("/api/pedidos")
             .header("Authorization", "Bearer " + token)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(data)))
@@ -137,7 +137,7 @@ class PedidoControllerIT {
     pedido.setQuantidade(2);
     pedido = pedidoRepository.save(pedido);
     
-    mockMvc.perform(get("/pedidos/{id}", pedido.getId())
+    mockMvc.perform(get("/api/pedidos/{id}", pedido.getId())
             .header("Authorization", "Bearer " + token)
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
@@ -148,7 +148,7 @@ class PedidoControllerIT {
         .andExpect(jsonPath("$.clienteId").value(cliente.getId())) .andExpect(jsonPath("$.vendedorId").value(vendedor.getId())) .andExpect(jsonPath("$.produtos", hasSize(2))); } @Test
   
   void shouldReturn400WhenPedidoNotFound() throws Exception {
-    mockMvc.perform(get("/pedidos/{id}", 999L)
+    mockMvc.perform(get("/api/pedidos/{id}", 999L)
             .header("Authorization", "Bearer " + token)
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());

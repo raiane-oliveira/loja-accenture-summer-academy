@@ -89,7 +89,7 @@ public class PagamentoControllerIT {
     pagamento.setValor(BigDecimal.valueOf(100.00));
     pagamento = pagamentoRepository.save(pagamento);
     
-    mockMvc.perform(get("/pagamentos/{pagamentoId}", pagamento.getId())
+    mockMvc.perform(get("/api/pagamentos/{pagamentoId}", pagamento.getId())
             .header("Authorization", "Bearer " + token) // Adiciona o token no cabeçalho
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
@@ -101,7 +101,7 @@ public class PagamentoControllerIT {
   
   @Test
   void shouldReturnErrorWhenPagamentoDoesNotExist() throws Exception {
-    mockMvc.perform(get("/pagamentos/{pagamentoId}", 999)
+    mockMvc.perform(get("/api/pagamentos/{pagamentoId}", 999)
             .header("Authorization", "Bearer " + token) // Adiciona o token no cabeçalho
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());

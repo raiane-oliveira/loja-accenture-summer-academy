@@ -74,7 +74,7 @@ class ProdutoControllerIT {
     var produto2 = MakeProduto.create(null, "Produto 2", "Descrição 2", BigDecimal.valueOf(20), vendedor);
     produtoRepository.saveAll(List.of(produto1, produto2));
     
-    mockMvc.perform(get("/produtos")
+    mockMvc.perform(get("/api/produtos")
             .param("page", "0")
             .param("size", "10"))
         .andExpect(status().isOk())
@@ -87,7 +87,7 @@ class ProdutoControllerIT {
     var produto = MakeProduto.create(null, "Produto Teste", "Descrição Teste", BigDecimal.TEN, vendedor);
     produto = produtoRepository.save(produto);
     
-    mockMvc.perform(get("/produtos/" + produto.getId()))
+    mockMvc.perform(get("/api/produtos/" + produto.getId()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.nome").value("Produto Teste"));
   }
@@ -97,7 +97,7 @@ class ProdutoControllerIT {
     CadastrarProdutoDTO produtoDTO = new CadastrarProdutoDTO(
         "Novo Produto", "Descrição do Produto", BigDecimal.valueOf(30), vendedor.getId());
     
-    mockMvc.perform(post("/produtos")
+    mockMvc.perform(post("/api/produtos")
             .header("Authorization", "Bearer " + token)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(produtoDTO)))
@@ -114,7 +114,7 @@ class ProdutoControllerIT {
     
     var atualizarProdutoDTO = new AtualizarProdutoDTO("Produto Atualizado", null, BigDecimal.valueOf(50));
     
-    mockMvc.perform(put("/produtos/" + vendedor.getId() + "/" + produto.getId())
+    mockMvc.perform(put("/api/produtos/" + vendedor.getId() + "/" + produto.getId())
             .header("Authorization", "Bearer " + token)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(atualizarProdutoDTO)))
@@ -135,7 +135,7 @@ class ProdutoControllerIT {
     vendedor.getProdutos().add(produto);
     vendedorRepository.save(vendedor);
     
-    mockMvc.perform(delete("/produtos/" + vendedor.getId() + "/" + produto.getId())
+    mockMvc.perform(delete("/api/produtos/" + vendedor.getId() + "/" + produto.getId())
             .header("Authorization", "Bearer " + token))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value("Produto removido com sucesso"));

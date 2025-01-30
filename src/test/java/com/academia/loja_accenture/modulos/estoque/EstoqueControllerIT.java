@@ -81,7 +81,7 @@ class EstoqueControllerIT {
 
     EstoqueRequestDTO request = new EstoqueRequestDTO(produto.getId(), 50L);
 
-    mockMvc.perform(post("/estoques")
+    mockMvc.perform(post("/api/estoques")
                 .header("Authorization", "Bearer " + token) // Adiciona o token no cabeçalho
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
@@ -107,7 +107,7 @@ class EstoqueControllerIT {
     estoque.setName(produto.getNome() + " - Estoque");
     estoqueRepository.save(estoque);
 
-    mockMvc.perform(get("/estoques")
+    mockMvc.perform(get("/api/estoques")
             .header("Authorization", "Bearer " + token)
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
@@ -130,7 +130,7 @@ class EstoqueControllerIT {
     estoque.setName(produto.getNome() + " - Estoque");
     estoque = estoqueRepository.save(estoque);
 
-    mockMvc.perform(get("/estoques/{id}", estoque.getId())
+    mockMvc.perform(get("/api/estoques/{id}", estoque.getId())
             .header("Authorization", "Bearer " + token)
         .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())

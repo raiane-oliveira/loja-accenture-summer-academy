@@ -11,12 +11,9 @@ Este projeto é uma aplicação Java desenvolvida com **Spring Boot** para geren
 
 ## Sumário
 - [Funcionalidades](#funcionalidades)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Configuração do Ambiente](#configuração-do-ambiente)
 - [Como Rodar o Projeto](#como-rodar-o-projeto)
-- [Endpoints da API](#endpoints-da-api)
 - [Rastreamento de Pedidos](#rastreamento-de-pedidos)
-- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Modelo de Dados (ER Diagram)](#modelo-de-dados-er-diagram)
 - [Testes](#testes)
   
@@ -30,6 +27,20 @@ Este sistema foi desenvolvido com o intuito de gerenciar pedidos de forma eficie
 - Interface de documentação com **Swagger**.
 - Persistência de dados com banco de dados relacional.
 - **Mensageria assíncrona com RabbitMQ**.
+
+## Como Rodar o Projeto
+
+Clone o projeto na sua máquina
+```bash
+git clone https://github.com/raiane-oliveira/loja-accenture-summer-academy.git
+```
+
+Crie o banco de dados `lojaaccenture` e `lojaaccenture_test` (MySQL).
+
+Rode a aplicação com a sua IDE ou com o comando:
+```bash
+mvn spring-boot:run
+```
 
 ## Rastreamento de Pedidos
 Cada pedido tem um status que pode mudar ao longo do tempo. As transições de status são controladas por eventos disparados no sistema.

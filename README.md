@@ -125,7 +125,7 @@ Isso garante um **fluxo de pedidos assíncrono e escalável**, sem bloqueios ent
 | `cliente_id` | BIGINT (FK) | Cliente relacionado |
 | `vendedor_id` | BIGINT (FK) | Vendedor responsável |
 
-#### **Tabela: historico_status**
+#### **Tabela: status_pedido**
 | Coluna | Tipo | Descrição |
 |--------|------|-----------|
 | id | BIGINT (PK) | Identificador único do histórico |

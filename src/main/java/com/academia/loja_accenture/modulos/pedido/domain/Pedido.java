@@ -61,14 +61,9 @@ public class Pedido {
     this.pedidoTemProdutos.add(pedidoTemProdutos);
     produto.getPedidoTemProdutos().add(pedidoTemProdutos);
   }
-
-  @ManyToMany
-  @JoinTable(
-          name = "pedido_historico_status",
-          joinColumns = @JoinColumn(name = "pedido_id"),
-          inverseJoinColumns = @JoinColumn(name = "status_pedido_id")
-  )
-  private Set<StatusPedido> historicoStatus = new HashSet<>();
+  
+  @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<StatusPedido> statusPedidos = new HashSet<>();
 
   @OneToOne(mappedBy = "pedido")
   private Pagamento pagamento;

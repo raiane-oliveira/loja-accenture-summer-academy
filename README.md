@@ -46,10 +46,10 @@ Os pedidos passam pelos seguintes status:
 Cada mudança de status dispara um **evento RabbitMQ**, notificando os sistemas interessados sobre a atualização.
 
 ### **Fluxo de Mensagens no RabbitMQ**
-1. Quando um pedido é criado, ele é enviado para a fila `pedido.criado`.
-2. O serviço de pagamentos consome essa mensagem e, se aprovado, publica na fila `pedido.pago`.
-3. O serviço de logística escuta `pedido.pago`, prepara o envio e publica em `pedido.enviado`.
-4. O sistema de rastreamento escuta `pedido.enviado` e, ao receber confirmação de entrega, envia `pedido.entregue`.
+1. Quando um pedido é criado, ele é enviado para a fila `pedidos.registrados`.
+2. O serviço de pagamentos consome essa mensagem e, se aprovado, publica na fila `pedidos.pagos` e `estoque.pedidos.pagos`.
+3. O sistema de rastreamento escuta `pedidos.pagos` e, ao receber confirmação de entrega, adiciona um status do pedido.
+4. Se o pagamento não foi aprovado, a mensagem é enviada para `pedidos.cancelados`, onde será adicionado o status de **CANCELADO** ao pedido.
 
 Isso garante um **fluxo de pedidos assíncrono e escalável**, sem bloqueios entre serviços.
 

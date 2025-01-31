@@ -63,7 +63,7 @@ Isso garante um **fluxo de pedidos assíncrono e escalável**, sem bloqueios ent
 - **JUnit 5** para testes unitários
 
 ## Modelo de Dados (ER Diagram)
-![ER Diagram](https://github.com/nataliatviana/readmetest/blob/main/diagrama%20loja%20atualizado.png?raw=true)
+![ER Diagram](https://github.com/nataliatviana/readmetest/blob/main/diagrama%20loja%20atualizado.png?raw=true](https://github.com/raiane-oliveira/loja-accenture-summer-academy/blob/main/Imagem1.png?raw=true)
 
 ### **Descrição das Entidades**
 #### **Tabela: `vendedor`**
